@@ -1,0 +1,296 @@
+<div class="card-perspective w-full max-w-4xl mx-auto my-6 select-none">
+  <!-- 3D Flippable Container with Dynamic Unfold Height -->
+  <div class="card-inner" [class.flipped]="isFlipped()" [style.height.px]="containerHeight()">
+
+    <!-- ============================================================= -->
+    <!-- FRONT FACE: AIRLINE BOARDING PASS TICKET                      -->
+    <!-- ============================================================= -->
+    <div 
+      #frontRef 
+      [class]="theme() === 'dark'
+        ? 'card-face card-front relative flex flex-col md:flex-row bg-slate-900/90 border border-slate-800 rounded-2xl backdrop-blur-xl shadow-2xl overflow-hidden hover:border-sky-500/50 transition-colors'
+        : 'card-face card-front relative flex flex-col md:flex-row bg-white/95 border border-slate-300 text-slate-900 rounded-2xl backdrop-blur-xl shadow-xl overflow-hidden hover:border-sky-500/50 transition-colors'">
+      
+      <!-- Top Ambient Airline Gradient Accent -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-emerald-500 to-indigo-500"></div>
+
+      <!-- Main Ticket Body (Left 70%) -->
+      <div class="flex-1 p-6 md:p-8 flex flex-col justify-between">
+        <div>
+          <!-- Header Bar: Flight Number & Status -->
+          <div class="flex items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-3">
+              <span class="px-2.5 py-1 rounded bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono text-xs font-bold tracking-wider flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                </svg>
+                <span>{{ project().flightNumber }}</span>
+              </span>
+              <span [class]="theme() === 'dark' ? 'font-mono text-xs text-slate-400 tracking-wider' : 'font-mono text-xs text-slate-500 tracking-wider'">
+                CALLSIGN: <strong [class]="theme() === 'dark' ? 'text-white' : 'text-slate-900'">{{ project().callsign }}</strong>
+              </span>
+            </div>
+
+            <!-- Flight Status Badge -->
+            <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 font-mono text-xs font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              {{ project().status }}
+            </div>
+          </div>
+
+          <!-- Origin -> Destination Route Display -->
+          <div class="flex items-center justify-between gap-4 my-6">
+            <div>
+              <p class="font-mono text-xs text-slate-400 uppercase tracking-widest">ORIGIN</p>
+              <h3 [class]="theme() === 'dark' ? 'text-xl md:text-2xl font-black text-white tracking-tight' : 'text-xl md:text-2xl font-black text-slate-900 tracking-tight'">{{ project().route.origin }}</h3>
+            </div>
+
+            <!-- Airplane Route Vector Line -->
+            <div class="flex-1 flex flex-col items-center px-4">
+              <span class="text-xs font-mono text-sky-400/80 mb-1">NON-STOP</span>
+              <div class="w-full flex items-center gap-1">
+                <div class="w-2 h-2 rounded-full border border-sky-400"></div>
+                <div class="flex-1 h-[2px] bg-gradient-to-r from-sky-400 to-emerald-400 border-dashed"></div>
+                <svg class="w-3.5 h-3.5 text-sky-400 shrink-0 transform rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                </svg>
+                <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <p class="font-mono text-xs text-slate-400 uppercase tracking-widest">DESTINATION</p>
+              <h3 [class]="theme() === 'dark' ? 'text-xl md:text-2xl font-black text-white tracking-tight' : 'text-xl md:text-2xl font-black text-slate-900 tracking-tight'">{{ project().route.destination }}</h3>
+            </div>
+          </div>
+
+          <!-- Resume Project Summary -->
+          <p [class]="theme() === 'dark' ? 'text-slate-300 text-sm md:text-base leading-relaxed mb-6' : 'text-slate-600 text-sm md:text-base leading-relaxed mb-6'">
+            {{ project().tagline }}
+          </p>
+        </div>
+
+        <!-- Ticket Footer: Flight Specs & Tech Badges -->
+        <div>
+          <div [class]="theme() === 'dark' ? 'grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800/80 font-mono text-xs mb-4' : 'grid grid-cols-2 md:grid-cols-3 gap-4 pt-4 border-t border-slate-200 font-mono text-xs mb-4'">
+            <div>
+              <span class="text-slate-400 uppercase tracking-wider block">GATE / INFRA</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-200 font-semibold' : 'text-slate-800 font-semibold'">{{ project().gate }}</span>
+            </div>
+            <div>
+              <span class="text-slate-400 uppercase tracking-wider block">SEAT / ROLE</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-200 font-semibold' : 'text-slate-800 font-semibold'">{{ project().seat }}</span>
+            </div>
+            <div class="col-span-2 md:col-span-1">
+              <span class="text-slate-400 uppercase tracking-wider block">SPECIFICATION</span>
+              <span [class]="project().specification?.includes('POC') ? 'text-amber-400 font-semibold' : 'text-sky-500 font-semibold'">
+                {{ project().specification || 'VERIFIED PRODUCTION' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Tech Stack Tags -->
+          <div class="flex flex-wrap gap-1.5">
+            @for (tech of project().techStack; track tech) {
+              <span [class]="theme() === 'dark' ? 'px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700/60 text-slate-300 font-mono text-[11px]' : 'px-2 py-0.5 rounded bg-slate-100 border border-slate-300 text-slate-700 font-mono text-[11px]'">
+                {{ tech }}
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticket Perforation Tear-Line (Divider) -->
+      <div [class]="theme() === 'dark' ? 'relative flex md:flex-col items-center justify-between border-t md:border-t-0 md:border-l border-dashed border-slate-700/80 my-0' : 'relative flex md:flex-col items-center justify-between border-t md:border-t-0 md:border-l border-dashed border-slate-300 my-0'">
+        <!-- Top Cutout Notch -->
+        <div [class]="theme() === 'dark' ? 'hidden md:block absolute -top-4 -left-3.5 w-7 h-7 bg-slate-950 rounded-full border border-slate-800' : 'hidden md:block absolute -top-4 -left-3.5 w-7 h-7 bg-slate-100 rounded-full border border-slate-300'"></div>
+        <!-- Bottom Cutout Notch -->
+        <div [class]="theme() === 'dark' ? 'hidden md:block absolute -bottom-4 -left-3.5 w-7 h-7 bg-slate-950 rounded-full border border-slate-800' : 'hidden md:block absolute -bottom-4 -left-3.5 w-7 h-7 bg-slate-100 rounded-full border border-slate-300'"></div>
+      </div>
+
+      <!-- Tear-Off Stub (Right 30%) -->
+      <div [class]="theme() === 'dark' ? 'w-full md:w-64 p-6 md:p-8 bg-slate-950/40 flex flex-col justify-between items-center text-center' : 'w-full md:w-64 p-6 md:p-8 bg-slate-50/80 flex flex-col justify-between items-center text-center'">
+        <div class="w-full">
+          <p class="font-mono text-[10px] text-slate-400 uppercase tracking-widest mb-1">ENGINEER CALLSIGN</p>
+          <h4 [class]="theme() === 'dark' ? 'font-mono text-sm font-bold text-white tracking-wider mb-3' : 'font-mono text-sm font-bold text-slate-900 tracking-wider mb-3'">EDWIN LIN</h4>
+
+          <!-- Live Interactive Demo Shortcut if available -->
+          @if (project().caseStudy.liveDemoUrl) {
+            <button
+              type="button"
+              (click)="triggerDemo($event)"
+              class="w-full mb-3 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-mono text-xs font-black tracking-wider hover:opacity-95 transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 cursor-pointer animate-bounce">
+              <svg class="w-3.5 h-3.5 text-slate-950 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+              </svg>
+              <span>LAUNCH LIVE DEMO</span>
+            </button>
+          }
+
+          <!-- Simulated Boarding Barcode -->
+          <div class="h-12 w-full flex items-center justify-center gap-1 opacity-60 my-2">
+            <div [class]="theme() === 'dark' ? 'w-1 h-full bg-slate-400' : 'w-1 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-0.5 h-full bg-slate-400' : 'w-0.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-2 h-full bg-slate-400' : 'w-2 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-0.5 h-full bg-slate-400' : 'w-0.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-1.5 h-full bg-slate-400' : 'w-1.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-0.5 h-full bg-slate-400' : 'w-0.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-1 h-full bg-slate-400' : 'w-1 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-2.5 h-full bg-slate-400' : 'w-2.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-0.5 h-full bg-slate-400' : 'w-0.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-1 h-full bg-slate-400' : 'w-1 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-1.5 h-full bg-slate-400' : 'w-1.5 h-full bg-slate-700'"></div>
+            <div [class]="theme() === 'dark' ? 'w-2 h-full bg-slate-400' : 'w-2 h-full bg-slate-700'"></div>
+          </div>
+          <p class="font-mono text-[9px] text-slate-400 tracking-widest">DELTA // GSU_CS26</p>
+        </div>
+
+        <!-- 3D Flip Action Trigger -->
+        <button
+          type="button"
+          (click)="toggleFlip()"
+          [class]="theme() === 'dark'
+            ? 'w-full mt-4 px-4 py-2.5 rounded-xl bg-sky-500/10 border border-sky-500/40 text-sky-400 hover:bg-sky-500 hover:text-slate-950 font-mono text-xs font-bold tracking-wider transition-all shadow-lg hover:shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer'
+            : 'w-full mt-4 px-4 py-2.5 rounded-xl bg-sky-50 border border-sky-300 text-sky-700 hover:bg-sky-500 hover:text-white font-mono text-xs font-bold tracking-wider transition-all shadow-md hover:shadow-sky-500/20 flex items-center justify-center gap-2 cursor-pointer'">
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"/>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+            <path d="M3 22v-6h6"/>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+          </svg>
+          <span>FLIP FOR CASE STUDY</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ============================================================= -->
+    <!-- BACK FACE: RESUME CASE STUDY & METRICS                       -->
+    <!-- ============================================================= -->
+    <div 
+      #backRef 
+      [class]="theme() === 'dark'
+        ? 'card-face card-back relative flex flex-col bg-slate-900/95 border border-sky-500/30 rounded-2xl backdrop-blur-xl shadow-2xl p-6 md:p-8 overflow-hidden'
+        : 'card-face card-back relative flex flex-col bg-white/95 border border-sky-500/40 text-slate-900 rounded-2xl backdrop-blur-xl shadow-xl p-6 md:p-8 overflow-hidden'">
+      
+      <!-- Top Bar: Title & Flip Back Action -->
+      <div [class]="theme() === 'dark' ? 'flex items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6' : 'flex items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6'">
+        <div>
+          <span class="font-mono text-xs font-bold tracking-wider" [class]="project().specification?.includes('POC') ? 'text-amber-400' : 'text-sky-500'">
+            {{ project().specification?.includes('POC') ? 'RESEARCH PROOF OF CONCEPT (POC)' : 'ENGINEERING CASE STUDY' }}
+          </span>
+          <h3 [class]="theme() === 'dark' ? 'text-xl md:text-2xl font-bold text-white' : 'text-xl md:text-2xl font-bold text-slate-900'">{{ project().callsign }}</h3>
+        </div>
+
+        <button
+          type="button"
+          (click)="toggleFlip()"
+          [class]="theme() === 'dark'
+            ? 'px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white font-mono text-xs flex items-center gap-1.5 transition-colors cursor-pointer'
+            : 'px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-300 text-slate-700 hover:text-slate-900 font-mono text-xs flex items-center gap-1.5 transition-colors cursor-pointer'">
+          <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 14 4 9 9 4"/>
+            <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+          </svg>
+          <span>RETURN TO TICKET</span>
+        </button>
+      </div>
+
+      <!-- Problem vs Solution Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <!-- The Problem -->
+        <div [class]="theme() === 'dark' ? 'p-4 rounded-xl bg-red-500/5 border border-red-500/20' : 'p-4 rounded-xl bg-red-50 border border-red-200 shadow-sm'">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-red-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <h4 class="font-mono text-xs font-bold text-red-500 tracking-wider uppercase">THE CHALLENGE</h4>
+          </div>
+          <p [class]="theme() === 'dark' ? 'text-slate-300 text-xs md:text-sm leading-relaxed' : 'text-slate-700 text-xs md:text-sm leading-relaxed'">
+            {{ project().caseStudy.problem }}
+          </p>
+        </div>
+
+        <!-- The Solution -->
+        <div [class]="theme() === 'dark' ? 'p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20' : 'p-4 rounded-xl bg-emerald-50 border border-emerald-200 shadow-sm'">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <h4 class="font-mono text-xs font-bold text-emerald-500 tracking-wider uppercase">ENGINEERING IMPLEMENTATION</h4>
+          </div>
+          <p [class]="theme() === 'dark' ? 'text-slate-300 text-xs md:text-sm leading-relaxed' : 'text-slate-700 text-xs md:text-sm leading-relaxed'">
+            {{ project().caseStudy.solution }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Perforated Accordion Seam -->
+      <div class="relative my-3 flex items-center">
+        <div class="flex-1 border-t-2 border-dashed border-sky-500/30"></div>
+        <div [class]="theme() === 'dark'
+          ? 'px-3 py-1 rounded-full bg-slate-800/90 border border-slate-700/80 font-mono text-[9px] text-sky-400 font-bold tracking-widest flex items-center gap-1.5 uppercase'
+          : 'px-3 py-1 rounded-full bg-slate-100 border border-slate-300 font-mono text-[9px] text-sky-700 font-bold tracking-widest flex items-center gap-1.5 uppercase shadow-sm'">
+          <svg class="w-3 h-3 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+          <span>UNFOLDED METRICS & ARCHITECTURE</span>
+        </div>
+        <div class="flex-1 border-t-2 border-dashed border-sky-500/30"></div>
+      </div>
+
+      <!-- Folded Extension Flap (Animates down to show all metrics & links) -->
+      <div class="ticket-fold-flap flex flex-col justify-between flex-1 space-y-5">
+        <!-- Real Resume Metrics Row -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          @for (metric of project().caseStudy.metrics; track metric.label) {
+            <div [class]="theme() === 'dark' ? 'p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 text-center' : 'p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center shadow-sm'">
+              <p class="text-xl md:text-2xl font-black text-sky-500 tracking-tight">{{ metric.value }}</p>
+              <p class="font-mono text-[10px] text-slate-400 uppercase tracking-wider mt-0.5">{{ metric.label }}</p>
+              @if (metric.change) {
+                <span class="inline-block mt-1 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-mono font-semibold">
+                  {{ metric.change }}
+                </span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Deep Dive Notes & Action Links -->
+        <div [class]="theme() === 'dark' ? 'flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-800 mt-auto' : 'flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-200 mt-auto'">
+          <p [class]="theme() === 'dark' ? 'text-xs font-mono text-slate-400 max-w-md' : 'text-xs font-mono text-slate-600 max-w-md'">
+            {{ project().caseStudy.architectureNotes }}
+          </p>
+
+          <div class="flex items-center gap-3">
+            @if (project().caseStudy.liveDemoUrl) {
+              <button
+                type="button"
+                (click)="triggerDemo($event)"
+                class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-mono text-xs font-black flex items-center gap-2 transition-all shadow-lg shadow-emerald-500/20 cursor-pointer">
+                <svg class="w-3.5 h-3.5 text-slate-950 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                </svg>
+                <span>LAUNCH INTERACTIVE DEMO</span>
+              </button>
+            }
+            @if (project().caseStudy.githubUrl) {
+              <a
+                [href]="project().caseStudy.githubUrl"
+                target="_blank"
+                [class]="theme() === 'dark'
+                  ? 'px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors'
+                  : 'px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-mono text-xs font-semibold flex items-center gap-1.5 transition-colors'">
+                <span>GitHub Repository ↗</span>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

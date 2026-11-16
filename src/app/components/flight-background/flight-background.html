@@ -1,0 +1,221 @@
+<div [class]="theme() === 'dark' 
+  ? 'pointer-events-none absolute inset-0 overflow-hidden z-0 bg-slate-950 transition-colors duration-500' 
+  : 'pointer-events-none absolute inset-0 overflow-hidden z-0 bg-slate-100 transition-colors duration-500'">
+
+  <!-- REAL WORLD MAP + EXPANDED DELTA & GLOBAL AIRPORT HUBS -->
+  <div class="corridors absolute inset-0">
+    <!-- Deep Cosmic or Blueprint Vignette -->
+    <div [class]="theme() === 'dark' 
+      ? 'absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/60 via-slate-950 to-black' 
+      : 'absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-100/60 via-slate-100 to-slate-200/80'"></div>
+
+    <!-- Starfield Layer (Cosmic night sky in dark mode) -->
+    @if (theme() === 'dark') {
+      <div class="stars-layer absolute inset-0 opacity-40"></div>
+    }
+
+    <!-- Faint Navigation Coordinate Grid -->
+    <div [class]="theme() === 'dark' 
+      ? 'absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-20' 
+      : 'absolute inset-0 bg-[linear-gradient(to_right,#cbd5e1_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e1_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,#000_60%,transparent_100%)] opacity-40'"></div>
+
+    <!-- Main Flight Tracking Vector Canvas (Exact World Map ViewBox: 30.767 241.591 784.077 458.627) -->
+    <svg class="w-full h-full relative z-10" viewBox="30.767 241.591 784.077 458.627" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="trailGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0284c7" stop-opacity="0.15" />
+          <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.2" />
+        </linearGradient>
+
+        <linearGradient id="hubGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.2" />
+          <stop offset="50%" stop-color="#34d399" stop-opacity="0.95" />
+          <stop offset="100%" stop-color="#059669" stop-opacity="0.2" />
+        </linearGradient>
+      </defs>
+
+      <!-- The Real World Map Silhouette Layer -->
+      <image
+        href="world-map.svg"
+        x="30.767"
+        y="241.591"
+        width="784.077"
+        height="458.627"
+        [class]="theme() === 'dark' ? 'opacity-60' : 'opacity-25 contrast-125'"
+      />
+
+        <!-- ------------------------------------------------------------- -->
+        <!-- GEOGRAPHICALLY PRECISE FLIGHT CORRIDORS                       -->
+        <!-- ------------------------------------------------------------- -->
+        <!-- 1. Seattle SEA (131.7, 385) -> Salt Lake City SLC (154.2, 404.5) -> Minneapolis MSP (195.1, 392.5) -->
+        <path d="M 131.7 385 Q 140 395 154.2 404.5" class="flight-corridor-path" fill="none" stroke="url(#trailGradient)" stroke-width="1.3" />
+        <path d="M 154.2 404.5 Q 175 395 195.1 392.5" class="flight-corridor-path alt-delay" fill="none" stroke="url(#trailGradient)" stroke-width="1.3" />
+
+        <!-- 2. Los Angeles LAX (140.2, 424.5) -> Atlanta ATL Hub (214.2, 425.4) -->
+        <path d="M 140.2 424.5 Q 175 435 214.2 425.4" class="flight-corridor-path alt-delay-2" fill="none" stroke="url(#hubGradient)" stroke-width="1.8" />
+
+        <!-- 3. Minneapolis MSP (195.1, 392.5) -> Detroit DTW (216.5, 400.3) -> Boston BOS (243.4, 399.9) -->
+        <path d="M 195.1 392.5 Q 205 395 216.5 400.3" class="flight-corridor-path" fill="none" stroke="url(#trailGradient)" stroke-width="1.3" />
+        <path d="M 216.5 400.3 Q 230 398 243.4 399.9" class="flight-corridor-path alt-delay" fill="none" stroke="url(#trailGradient)" stroke-width="1.3" />
+
+        <!-- 4. Atlanta ATL (214.2, 425.4) -> New York JFK (237.4, 404.9) -->
+        <path d="M 214.2 425.4 Q 225 412 237.4 404.9" class="flight-corridor-path" fill="none" stroke="url(#hubGradient)" stroke-width="1.8" />
+
+        <!-- 5. Transatlantic: New York JFK (237.4, 404.9) -> London LHR (397, 373.2) -->
+        <path d="M 237.4 404.9 Q 310 335 397 373.2" class="flight-corridor-path transatlantic" fill="none" stroke="url(#trailGradient)" stroke-width="1.6" />
+
+        <!-- 6. Transatlantic: Boston BOS (243.4, 399.9) -> Paris CDG (403.6, 380.4) -->
+        <path d="M 243.4 399.9 Q 320 340 403.6 380.4" class="flight-corridor-path alt-delay" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+
+        <!-- 7. Transatlantic: Detroit DTW (216.5, 400.3) -> Amsterdam AMS SkyTeam Hub (408.4, 370.7) -->
+        <path d="M 216.5 400.3 Q 305 325 408.4 370.7" class="flight-corridor-path alt-delay-2" fill="none" stroke="url(#trailGradient)" stroke-width="1.5" />
+
+        <!-- 8. Latin America: Atlanta ATL (214.2, 425.4) -> São Paulo GRU (296.8, 592.7) -->
+        <path d="M 214.2 425.4 Q 245 510 296.8 592.7" class="flight-corridor-path transatlantic" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+
+        <!-- 9. Middle East & Asia: Paris CDG (403.6, 380.4) -> Dubai DXB (518.5, 450) -> Singapore SIN (624.4, 520) -->
+        <path d="M 403.6 380.4 Q 460 410 518.5 450" class="flight-corridor-path" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+        <path d="M 518.5 450 Q 570 480 624.4 520" class="flight-corridor-path alt-delay" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+
+        <!-- 10. Far East Hubs: Seoul ICN (673.3, 414.2) -> Tokyo HND (702.3, 419.8) -->
+        <path d="M 673.3 414.2 Q 688 412 702.3 419.8" class="flight-corridor-path alt-delay-2" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+
+        <!-- 11. Australia: Singapore SIN (624.4, 520) -> Sydney SYD (727.1, 623.5) -->
+        <path d="M 624.4 520 Q 675 570 727.1 623.5" class="flight-corridor-path" fill="none" stroke="url(#trailGradient)" stroke-width="1.4" />
+
+        <!-- 12. Africa: Amsterdam AMS (408.4, 370.7) -> Johannesburg JNB (459.5, 600.6) -->
+        <path d="M 408.4 370.7 Q 440 480 459.5 600.6" class="flight-corridor-path transatlantic" fill="none" stroke="url(#trailGradient)" stroke-width="1.3" />
+
+
+        <!-- ------------------------------------------------------------- -->
+        <!-- GEOGRAPHIC AIRPORT BEACONS & HUBS                             -->
+        <!-- ------------------------------------------------------------- -->
+
+        <!-- === NORTH AMERICA: DELTA CORE HUBS === -->
+
+        <!-- ATL (Atlanta - Delta Global HQ & Mega Hub) -->
+        <g transform="translate(214.2, 425.4)">
+          <circle r="4.5" class="fill-emerald-400" />
+          <circle r="10" class="stroke-emerald-400/80 stroke-[0.8] fill-none animate-ping" />
+          <circle r="16" class="stroke-sky-400/40 stroke-[0.6] fill-none" stroke-dasharray="2 2" />
+          <text x="8" y="3" class="fill-emerald-400 font-mono text-[9px] font-bold tracking-wider">ATL [DELTA_HQ]</text>
+        </g>
+
+        <!-- MSP (Minneapolis-St. Paul Hub) -->
+        <g transform="translate(195.1, 392.5)">
+          <circle r="2.5" class="fill-sky-400" />
+          <text x="-24" y="-5" class="fill-slate-400 font-mono text-[7px] font-semibold">MSP</text>
+        </g>
+
+        <!-- DTW (Detroit Hub) -->
+        <g transform="translate(216.5, 400.3)">
+          <circle r="2.8" class="fill-sky-400" />
+          <text x="5" y="-5" class="fill-slate-400 font-mono text-[7px] font-semibold">DTW</text>
+        </g>
+
+        <!-- SLC (Salt Lake City Hub) -->
+        <g transform="translate(154.2, 404.5)">
+          <circle r="2.5" class="fill-sky-400" />
+          <text x="-20" y="8" class="fill-slate-400 font-mono text-[7px] font-semibold">SLC</text>
+        </g>
+
+        <!-- SEA (Seattle Hub) -->
+        <g transform="translate(131.7, 385.0)">
+          <circle r="2.8" class="fill-sky-400" />
+          <text x="-22" y="-6" class="fill-slate-400 font-mono text-[7px] font-semibold">SEA</text>
+        </g>
+
+        <!-- LAX (Los Angeles Hub) -->
+        <g transform="translate(140.2, 424.5)">
+          <circle r="3" class="fill-sky-400" />
+          <circle r="6" class="stroke-sky-400/50 stroke-[0.6] fill-none animate-ping" />
+          <text x="-22" y="10" class="fill-slate-400 font-mono text-[7px] font-semibold">LAX</text>
+        </g>
+
+        <!-- JFK (New York Hub) -->
+        <g transform="translate(237.4, 404.9)">
+          <circle r="3.2" class="fill-sky-400" />
+          <circle r="7" class="stroke-sky-400/50 stroke-[0.8] fill-none animate-ping" />
+          <text x="6" y="3" class="fill-sky-300 font-mono text-[8px] font-semibold">JFK</text>
+        </g>
+
+        <!-- BOS (Boston Hub) -->
+        <g transform="translate(243.4, 399.9)">
+          <circle r="2.5" class="fill-sky-400" />
+          <text x="5" y="-4" class="fill-slate-400 font-mono text-[7px] font-semibold">BOS</text>
+        </g>
+
+
+        <!-- === EUROPE & SKYTEAM ALLIANCE HUBS === -->
+
+        <!-- LHR (London Heathrow) -->
+        <g transform="translate(397.0, 373.2)">
+          <circle r="3" class="fill-indigo-400" />
+          <text x="-22" y="-5" class="fill-indigo-300 font-mono text-[7.5px] font-semibold">LHR</text>
+        </g>
+
+        <!-- CDG (Paris Charles de Gaulle - SkyTeam Hub) -->
+        <g transform="translate(403.6, 380.4)">
+          <circle r="3" class="fill-indigo-400" />
+          <text x="5" y="8" class="fill-indigo-300 font-mono text-[7.5px] font-semibold">CDG</text>
+        </g>
+
+        <!-- AMS (Amsterdam Schiphol - SkyTeam Mega Hub) -->
+        <g transform="translate(408.4, 370.7)">
+          <circle r="3" class="fill-indigo-400" />
+          <circle r="7" class="stroke-indigo-400/50 stroke-[0.6] fill-none animate-ping" />
+          <text x="6" y="-3" class="fill-indigo-300 font-mono text-[7.5px] font-semibold">AMS</text>
+        </g>
+
+
+        <!-- === ASIA / MIDDLE EAST / PACIFIC === -->
+
+        <!-- DXB (Dubai) -->
+        <g transform="translate(518.5, 450.0)">
+          <circle r="2.8" class="fill-amber-400" />
+          <text x="6" y="3" class="fill-amber-300 font-mono text-[7.5px] font-semibold">DXB</text>
+        </g>
+
+        <!-- ICN (Seoul Incheon - Delta Pacific Gateway) -->
+        <g transform="translate(673.3, 414.2)">
+          <circle r="3" class="fill-sky-400" />
+          <text x="-22" y="-5" class="fill-sky-300 font-mono text-[7.5px] font-semibold">ICN</text>
+        </g>
+
+        <!-- HND (Tokyo Haneda) -->
+        <g transform="translate(702.3, 419.8)">
+          <circle r="3" class="fill-sky-400" />
+          <circle r="7" class="stroke-sky-400/50 stroke-[0.6] fill-none animate-ping" />
+          <text x="6" y="3" class="fill-sky-300 font-mono text-[7.5px] font-semibold">HND</text>
+        </g>
+
+        <!-- SIN (Singapore Changi) -->
+        <g transform="translate(624.4, 520.0)">
+          <circle r="2.8" class="fill-teal-400" />
+          <text x="6" y="3" class="fill-teal-300 font-mono text-[7.5px] font-semibold">SIN</text>
+        </g>
+
+        <!-- SYD (Sydney) -->
+        <g transform="translate(727.1, 623.5)">
+          <circle r="2.8" class="fill-sky-400" />
+          <text x="6" y="3" class="fill-slate-400 font-mono text-[7.5px] font-semibold">SYD</text>
+        </g>
+
+
+        <!-- === LATIN AMERICA & AFRICA === -->
+
+        <!-- GRU (São Paulo) -->
+        <g transform="translate(296.8, 592.7)">
+          <circle r="2.8" class="fill-sky-400" />
+          <text x="6" y="3" class="fill-slate-400 font-mono text-[7.5px] font-semibold">GRU</text>
+        </g>
+
+        <!-- JNB (Johannesburg) -->
+        <g transform="translate(459.5, 600.6)">
+          <circle r="2.8" class="fill-sky-400" />
+          <text x="6" y="3" class="fill-slate-400 font-mono text-[7.5px] font-semibold">JNB</text>
+        </g>
+      </svg>
+    </div>
+</div>

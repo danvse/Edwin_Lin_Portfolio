@@ -1,0 +1,575 @@
+<div [class]="theme() === 'dark' 
+  ? 'fixed inset-0 z-50 overflow-y-auto bg-slate-950/95 text-slate-100 backdrop-blur-2xl p-4 md:p-8 animate-fade-in' 
+  : 'fixed inset-0 z-50 overflow-y-auto bg-slate-100/95 text-slate-900 backdrop-blur-2xl p-4 md:p-8 animate-fade-in'">
+
+  <div class="max-w-7xl mx-auto">
+    
+    <!-- Top Header Navigation Bar with Theme Toggle -->
+    <header [class]="theme() === 'dark' 
+      ? 'flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800 mb-8' 
+      : 'flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-300 mb-8'">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-3.5 h-3.5 rounded bg-emerald-500 animate-pulse"></div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold">
+              DELTA AIR LINES // ANALYTICS OPS CONSOLE
+            </span>
+            <span [class]="theme() === 'dark' ? 'font-mono text-xs text-slate-400' : 'font-mono text-xs text-slate-500'">
+              ENGINEER: EDWIN LIN
+            </span>
+          </div>
+          <h1 [class]="theme() === 'dark' ? 'text-2xl md:text-3xl font-black tracking-tight text-white mt-1' : 'text-2xl md:text-3xl font-black tracking-tight text-slate-900 mt-1'">
+            ServiceNow ML Intent Classification & Routing Hub
+          </h1>
+        </div>
+      </div>
+
+      <!-- Header Action Controls: Theme Switcher, Demo Disclaimer & Close -->
+      <div class="flex items-center gap-3">
+        <!-- Disclaimer Badge / Trigger -->
+        <button
+          type="button"
+          (click)="openDisclaimer()"
+          [class]="theme() === 'dark'
+            ? 'px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 font-mono text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-sm'
+            : 'px-3 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 hover:bg-amber-100 font-mono text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-sm'">
+          <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>DEMO DATA NOTICE</span>
+        </button>
+
+        <!-- Light / Dark Mode Toggle Button -->
+        <button
+          type="button"
+          (click)="toggleTheme()"
+          [class]="theme() === 'dark'
+            ? 'px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-700 text-amber-400 hover:bg-slate-800 font-mono text-xs font-bold transition-all flex items-center gap-2 shadow cursor-pointer'
+            : 'px-3.5 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-mono text-xs font-bold transition-all flex items-center gap-2 shadow cursor-pointer'">
+          @if (theme() === 'dark') {
+            <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <span>LIGHT MODE</span>
+          } @else {
+            <svg class="w-3.5 h-3.5 text-indigo-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <span>DARK MODE</span>
+          }
+        </button>
+
+        <!-- Close Button -->
+        <button
+          type="button"
+          (click)="close.emit()"
+          [class]="theme() === 'dark'
+            ? 'px-4 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-xs font-bold tracking-wider transition-all flex items-center gap-2 shadow-lg cursor-pointer'
+            : 'px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 font-mono text-xs font-bold tracking-wider transition-all flex items-center gap-2 shadow-lg cursor-pointer'">
+          <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 14 4 9 9 4"/>
+            <path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+          </svg>
+          <span>RETURN TO FLIGHT MANIFEST</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI Metric Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div [class]="theme() === 'dark' ? 'p-4 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-4 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+        <span class="font-mono text-[10px] text-slate-400 uppercase tracking-widest block">MODEL ACCURACY ({{ selectedStation() }})</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <p class="text-3xl font-black text-sky-500 tracking-tight">{{ currentStationProfile().accuracy }}</p>
+          <span class="font-mono text-xs text-emerald-500 font-semibold">{{ currentStationProfile().f1 }} F1</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1 font-mono">LinearSVC (scikit-learn)</p>
+      </div>
+
+      <div [class]="theme() === 'dark' ? 'p-4 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-4 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+        <span class="font-mono text-[10px] text-slate-400 uppercase tracking-widest block">MONTHLY INTENT INGESTION</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <p class="text-3xl font-black text-emerald-500 tracking-tight">10,000+</p>
+          <span class="font-mono text-xs text-slate-400">TICKETS/MO</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1 font-mono">ServiceNow Operational Influx</p>
+      </div>
+
+      <div [class]="theme() === 'dark' ? 'p-4 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-4 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+        <span class="font-mono text-[10px] text-slate-400 uppercase tracking-widest block">DAILY RETRAINING</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <p class="text-3xl font-black text-indigo-500 tracking-tight">AUTO</p>
+          <span class="font-mono text-xs text-emerald-500 font-semibold">VERIFIED</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1 font-mono">PostgreSQL Dev Database</p>
+      </div>
+
+      <div [class]="theme() === 'dark' ? 'p-4 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-4 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+        <span class="font-mono text-[10px] text-slate-400 uppercase tracking-widest block">CLOUD INFERENCE</span>
+        <div class="flex items-baseline gap-2 mt-1">
+          <p class="text-3xl font-black text-amber-500 tracking-tight">LAMBDA</p>
+          <span class="font-mono text-xs text-slate-400">REST API</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1 font-mono">Amazon Web Services (AWS)</p>
+      </div>
+    </div>
+
+    <!-- Active Filter Ribbon Bar with Reset Action -->
+    <div [class]="theme() === 'dark' 
+      ? 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 mb-8' 
+      : 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-white border border-slate-200 shadow-sm mb-8'">
+      
+      <div class="flex items-center gap-2 overflow-x-auto py-1">
+        <span class="font-mono text-xs text-slate-400 px-2 uppercase tracking-wider whitespace-nowrap">STATION:</span>
+        @for (st of stations; track st) {
+          <button
+            type="button"
+            (click)="setStation(st)"
+            [class]="selectedStation() === st 
+              ? 'px-3 py-1 rounded-xl bg-sky-500 text-slate-950 font-mono text-xs font-bold transition-all shadow-md shadow-sky-500/20 whitespace-nowrap cursor-pointer' 
+              : 'px-3 py-1 rounded-xl bg-slate-800/40 hover:bg-slate-800 text-slate-300 font-mono text-xs transition-all whitespace-nowrap cursor-pointer'">
+            {{ st }}
+          </button>
+        }
+      </div>
+
+      @if (selectedStation() !== 'ALL' || selectedCategory() !== 'ALL') {
+        <button
+          type="button"
+          (click)="resetFilters()"
+          class="px-3 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-mono text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer">
+          ✕ RESET ALL FILTERS
+        </button>
+      }
+    </div>
+
+    <!-- Main Grid: Charts & Categories Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Left 2 Cols: Weekly Ingestion Volume & Hub Distribution -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Weekly Trend SVG Chart with Clickable Data Points -->
+        <div [class]="theme() === 'dark' ? 'p-6 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-6 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs text-slate-400 uppercase tracking-wider">WEEKLY INGESTION TREND (CLICK ANY POINT TO INSPECT)</span>
+                <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-mono text-[10px] font-bold">
+                  {{ selectedStation() }}
+                </span>
+              </div>
+              <h3 [class]="theme() === 'dark' ? 'text-lg font-bold text-white' : 'text-lg font-bold text-slate-900'">
+                Classified Ticket Surge Analysis: {{ currentStationProfile().name }}
+              </h3>
+            </div>
+            <span class="font-mono text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 flex items-center gap-1.5">
+              <span>PEAK: {{ chartData().maxItemVal }} TIX</span>
+              <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"/>
+                <polyline points="7 7 17 7 17 17"/>
+              </svg>
+            </span>
+          </div>
+
+          <!-- Hand-Drawn Responsive SVG Line & Area Chart with Interactive Nodes -->
+          <div class="w-full h-52 relative">
+            <svg class="w-full h-full overflow-visible" viewBox="0 0 600 180" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0" />
+                </linearGradient>
+              </defs>
+
+              <!-- Grid Horizontal Reference Lines -->
+              <line x1="0" y1="30" x2="600" y2="30" stroke="#334155" stroke-dasharray="3 3" opacity="0.3" />
+              <text x="5" y="26" fill="#64748b" font-size="9" font-family="monospace">100 tix</text>
+
+              <line x1="0" y1="65" x2="600" y2="65" stroke="#334155" stroke-dasharray="3 3" opacity="0.3" />
+              <text x="5" y="61" fill="#64748b" font-size="9" font-family="monospace">75 tix</text>
+
+              <line x1="0" y1="100" x2="600" y2="100" stroke="#334155" stroke-dasharray="3 3" opacity="0.3" />
+              <text x="5" y="96" fill="#64748b" font-size="9" font-family="monospace">50 tix</text>
+
+              <line x1="0" y1="135" x2="600" y2="135" stroke="#334155" stroke-dasharray="3 3" opacity="0.3" />
+              <text x="5" y="131" fill="#64748b" font-size="9" font-family="monospace">25 tix</text>
+
+              <!-- Area Fill (Bound to reactive computed polygon) -->
+              <polygon [attr.points]="chartData().polygon" fill="url(#chartGlow)" class="transition-all duration-500 ease-out" />
+
+              <!-- Main Trend Line (Bound to reactive computed polyline) -->
+              <polyline [attr.points]="chartData().polyline" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-all duration-500 ease-out" />
+
+              <!-- Dynamic Interactive Clickable Data Nodes -->
+              @for (pt of chartData().points; track pt.week) {
+                <g (click)="openChartDrilldown({ title: pt.week + ' Disruption Inspection (' + selectedStation() + ')', count: pt.val, station: selectedStation() })" class="cursor-pointer group">
+                  <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="5" class="fill-sky-400 group-hover:r-7 transition-all" />
+                  @if (pt === chartData().currentPeak) {
+                    <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="8" class="fill-emerald-400 animate-pulse" />
+                    <circle [attr.cx]="pt.x" [attr.cy]="pt.y" r="14" class="stroke-emerald-400/50 stroke-1 fill-none animate-ping" />
+                  }
+                </g>
+              }
+            </svg>
+          </div>
+          <div class="flex justify-between font-mono text-[10px] text-slate-500 pt-2 border-t border-slate-800">
+            @for (pt of chartData().points; track pt.week) {
+              <span [class]="pt === chartData().currentPeak ? 'text-emerald-400 font-bold' : ''">
+                {{ pt.week }} ({{ pt.val }} tix)
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- NEW CHART 2: Hub Station Distribution Bar Breakdown (Interactive Click-to-Filter) -->
+        <div [class]="theme() === 'dark' ? 'p-6 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-6 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <span class="font-mono text-xs text-slate-400 uppercase tracking-wider">REGIONAL VOLUME DISTRIBUTION</span>
+              <h3 [class]="theme() === 'dark' ? 'text-base font-bold text-white' : 'text-base font-bold text-slate-900'">
+                Hub Breakdown (Click Any Card to Filter Dashboard)
+              </h3>
+            </div>
+            <span class="font-mono text-xs text-sky-400">6 HUBS MONITORED</span>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            @for (hub of stationVolumes; track hub.code) {
+              <div
+                (click)="setStation(hub.code)"
+                [class]="selectedStation() === hub.code 
+                  ? 'p-3.5 rounded-xl bg-sky-500/20 border-2 border-sky-400 text-left transition-all cursor-pointer shadow-lg shadow-sky-500/10' 
+                  : (theme() === 'dark' ? 'p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 text-left transition-all cursor-pointer' : 'p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 text-left transition-all cursor-pointer')">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="font-mono text-xs font-bold text-sky-400">{{ hub.code }}</span>
+                  <span class="font-mono text-xs font-bold">{{ hub.count }} tix</span>
+                </div>
+                <div class="w-full bg-slate-800/50 h-1.5 rounded-full overflow-hidden mt-1.5">
+                  <div class="bg-gradient-to-r from-sky-400 to-indigo-500 h-full rounded-full" [style.width.%]="hub.pct * 2"></div>
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                  <span class="font-mono text-[10px] text-slate-400 truncate">{{ hub.name }}</span>
+                  <span 
+                    (click)="$event.stopPropagation(); openChartDrilldown({ title: hub.name + ' Station Forensic', station: hub.code, count: hub.count })" 
+                    class="font-mono text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 cursor-pointer">
+                    <span>Inspect</span>
+                    <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="7" y1="17" x2="17" y2="7"/>
+                      <polyline points="7 7 17 7 17 17"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 1 Col: Category Breakdown (Click to Filter or Popup) -->
+      <div [class]="theme() === 'dark' ? 'p-6 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between' : 'p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between'">
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-mono text-xs text-slate-400 uppercase tracking-wider">BUSINESS CATEGORIES</span>
+            <span class="font-mono text-[10px] text-sky-400">HUB: {{ selectedStation() }}</span>
+          </div>
+          <h3 [class]="theme() === 'dark' ? 'text-base font-bold text-white mb-4' : 'text-base font-bold text-slate-900 mb-4'">
+            LinearSVC Classifier Distribution
+          </h3>
+
+          <div class="space-y-2.5">
+            @for (cat of dynamicCategories(); track cat.name) {
+              <button
+                type="button"
+                (click)="setCategory(cat.name)"
+                [class]="selectedCategory() === cat.name 
+                  ? 'w-full text-left p-3 rounded-xl bg-sky-500/15 border border-sky-500/60 transition-all cursor-pointer shadow-md' 
+                  : (theme() === 'dark' ? 'w-full text-left p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-slate-700 transition-all cursor-pointer' : 'w-full text-left p-3 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all cursor-pointer')">
+                <div class="flex items-center justify-between">
+                  <span [class]="theme() === 'dark' ? 'font-mono text-xs font-semibold text-slate-200 truncate' : 'font-mono text-xs font-semibold text-slate-800 truncate'">
+                    {{ cat.name }}
+                  </span>
+                  <div class="flex items-center gap-1.5 ml-2">
+                    <span class="font-mono text-xs font-bold text-sky-400">{{ cat.count }}</span>
+                    <span class="font-mono text-[10px] text-slate-400">({{ cat.pct }}%)</span>
+                  </div>
+                </div>
+                <div class="w-full bg-slate-800/50 h-1.5 rounded-full mt-2 overflow-hidden">
+                  <div class="h-full rounded-full transition-all duration-300" [style.background-color]="cat.color" [style.width.%]="cat.pct"></div>
+                </div>
+              </button>
+            }
+          </div>
+        </div>
+
+        <button
+          type="button"
+          (click)="openChartDrilldown({ title: 'Full 8-Category LinearSVC Evaluation Metrics', count: 524, station: selectedStation() })"
+          class="mt-6 w-full py-2.5 rounded-xl bg-sky-500/10 hover:bg-sky-500 hover:text-slate-950 text-sky-400 border border-sky-500/30 font-mono text-xs font-bold tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+          </svg>
+          <span>INSPECT MODEL CONFUSION MATRIX</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Ticket Inspection Stream (Filtered Output) -->
+    <div [class]="theme() === 'dark' ? 'p-6 rounded-2xl bg-slate-900/80 border border-slate-800' : 'p-6 rounded-2xl bg-white border border-slate-200 shadow-sm'">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-4 pb-3 border-b border-slate-800/80">
+        <div>
+          <span class="font-mono text-xs text-sky-400 tracking-wider">REAL-TIME INFERENCE LOG</span>
+          <h3 [class]="theme() === 'dark' ? 'text-lg font-bold text-white' : 'text-lg font-bold text-slate-900'">
+            Live Classified ServiceNow Tickets ({{ filteredTickets().length }} Displayed)
+          </h3>
+        </div>
+        <div class="flex items-center gap-2 font-mono text-xs text-slate-400">
+          <span>ACTIVE FILTER:</span>
+          <span class="px-2 py-0.5 rounded bg-slate-800 text-sky-400 font-semibold">{{ selectedStation() }}</span>
+          @if (selectedCategory() !== 'ALL') {
+            <span class="px-2 py-0.5 rounded bg-slate-800 text-emerald-400 font-semibold">{{ selectedCategory() }}</span>
+          }
+        </div>
+      </div>
+
+      <!-- Tickets Table / List with Click to Drill Down -->
+      <div class="space-y-3">
+        @for (ticket of filteredTickets(); track ticket.id) {
+          <div 
+            (click)="openChartDrilldown({ title: 'Ticket ' + ticket.id + ' Forensic Analysis', category: ticket.category, station: ticket.station })"
+            [class]="theme() === 'dark' 
+              ? 'p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-sky-500/50 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer' 
+              : 'p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-sky-500/50 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer'">
+            
+            <div class="flex-1">
+              <div class="flex items-center gap-2.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded bg-slate-800 font-mono text-xs font-bold text-white">{{ ticket.id }}</span>
+                <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono text-xs font-semibold">{{ ticket.station }} HUB</span>
+                @if (ticket.flightNumber) {
+                  <span class="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-400 font-mono text-xs font-semibold">{{ ticket.flightNumber }}</span>
+                }
+                <span class="font-mono text-xs text-slate-400">{{ ticket.category }}</span>
+              </div>
+              <p [class]="theme() === 'dark' ? 'text-sm text-slate-300 font-sans' : 'text-sm text-slate-700 font-sans'">
+                {{ ticket.summary }}
+              </p>
+            </div>
+
+            <!-- Model Confidence Meter -->
+            <div class="flex items-center gap-4 shrink-0">
+              <div class="text-right">
+                <span class="font-mono text-[10px] text-slate-500 uppercase tracking-widest block">CONFIDENCE</span>
+                <span class="font-mono text-sm font-black text-emerald-500">{{ (ticket.confidence * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="w-16 bg-slate-800/50 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-400 h-full rounded-full" [style.width.%]="ticket.confidence * 100"></div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider"
+                    [class]="ticket.status === 'RESOLVED' ? 'bg-slate-800 text-slate-300' : (ticket.status === 'ESCALATED' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30')">
+                {{ ticket.status }}
+              </span>
+            </div>
+          </div>
+        } @empty {
+          <div class="p-8 text-center font-mono text-sm text-slate-500">
+            No incoming tickets matching station {{ selectedStation() }} and category {{ selectedCategory() }}.
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- FORENSIC DRILL-DOWN POPUP MODAL (OPENS ON CHART/DATA CLICK)   -->
+  <!-- ============================================================= -->
+  @if (drilldownModal(); as data) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+      <div [class]="theme() === 'dark' 
+        ? 'w-full max-w-2xl bg-slate-900 border border-sky-500/40 rounded-2xl shadow-2xl p-6 md:p-8 overflow-hidden relative' 
+        : 'w-full max-w-2xl bg-white border border-sky-500/40 rounded-2xl shadow-2xl p-6 md:p-8 overflow-hidden relative text-slate-900'">
+        
+        <!-- Modal Top Bar -->
+        <div class="flex items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="font-mono text-xs text-sky-400 uppercase tracking-widest font-bold">ML FORENSIC INSPECTOR</span>
+            </div>
+            <h3 class="text-xl font-bold mt-1">{{ data.title }}</h3>
+          </div>
+
+          <button
+            type="button"
+            (click)="closeDrilldown()"
+            class="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-mono text-sm transition-colors cursor-pointer">
+            ✕
+          </button>
+        </div>
+
+        <!-- Metric Badges Row -->
+        <div class="grid grid-cols-3 gap-3 mb-6 font-mono text-center">
+          <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+            <span class="text-[10px] text-slate-500 block uppercase">STATION HUB</span>
+            <span class="text-sm font-bold text-sky-400">{{ data.station }}</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+            <span class="text-[10px] text-slate-500 block uppercase">VOLUME TICKETS</span>
+            <span class="text-sm font-bold text-emerald-400">{{ data.count }} Events</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+            <span class="text-[10px] text-slate-500 block uppercase">CLASSIFIER ACCURACY</span>
+            <span class="text-sm font-bold text-indigo-400">90.7% F1</span>
+          </div>
+        </div>
+
+        <!-- NLP TF-IDF Top Tokens extracted by LinearSVC -->
+        <div class="mb-6">
+          <span class="font-mono text-xs text-slate-400 uppercase tracking-wider block mb-2">
+            TOP NLP TF-IDF FEATURE WEIGHTS (SCIKIT-LEARN):
+          </span>
+          <div class="flex flex-wrap gap-2">
+            @for (token of data.topNlpTokens; track token.token) {
+              <span class="px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-300 font-mono text-xs flex items-center gap-1.5">
+                <span>{{ token.token }}</span>
+                <span class="text-slate-500 text-[10px]">({{ token.weight }})</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Affected Delta Flights -->
+        <div class="mb-6">
+          <span class="font-mono text-xs text-slate-400 uppercase tracking-wider block mb-2">
+            CORRESPONDING AFFECTED FLIGHT IDENTIFIERS:
+          </span>
+          <div class="flex flex-wrap gap-2">
+            @for (flight of data.affectedFlights; track flight) {
+              <span class="px-2.5 py-1 rounded-lg bg-slate-800/80 text-slate-300 font-mono text-xs font-semibold flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-sky-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                </svg>
+                <span>{{ flight }}</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Raw ServiceNow Payload Viewer -->
+        <div>
+          <span class="font-mono text-xs text-slate-400 uppercase tracking-wider block mb-2">
+            RAW REST API CLOUD PAYLOAD (AWS LAMBDA):
+          </span>
+          <pre class="p-3.5 rounded-xl bg-slate-950 font-mono text-xs text-emerald-400 overflow-x-auto border border-slate-800">{{ data.rawPayload | json }}</pre>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="mt-6 flex justify-end">
+          <button
+            type="button"
+            (click)="closeDrilldown()"
+            class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono text-xs font-bold transition-all shadow-lg cursor-pointer">
+            CLOSE INSPECTOR
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ============================================================= -->
+  <!-- DEMO DATA DISCLAIMER POPUP MODAL                             -->
+  <!-- ============================================================= -->
+  @if (showDisclaimer()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in">
+      <div [class]="theme() === 'dark' 
+        ? 'w-full max-w-xl bg-slate-900 border border-amber-500/40 rounded-2xl shadow-2xl p-6 md:p-8 overflow-hidden relative text-slate-100' 
+        : 'w-full max-w-xl bg-white border border-amber-500/50 rounded-2xl shadow-2xl p-6 md:p-8 overflow-hidden relative text-slate-900'">
+        
+        <!-- Header -->
+        <div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-800 mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+              <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+            </div>
+            <div>
+              <span class="font-mono text-[10px] text-amber-400 font-bold uppercase tracking-widest block">
+                COMPLIANCE & DEMO ENVIRONMENT NOTICE
+              </span>
+              <h3 class="text-lg md:text-xl font-black mt-0.5 tracking-tight">
+                Synthetic Demonstration Data
+              </h3>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="closeDisclaimer()"
+            class="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-mono text-sm transition-colors cursor-pointer shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Body Content -->
+        <div class="space-y-4 text-xs md:text-sm font-sans leading-relaxed">
+          <div [class]="theme() === 'dark' ? 'p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200' : 'p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900'">
+            <p class="font-semibold mb-1">
+              Notice to Viewers & Evaluators:
+            </p>
+            <p>
+              All ticket incidents, narrative descriptions, flight identifiers, timestamps, and station volume breakdowns displayed in this interactive dashboard are <strong>synthetic mock data</strong> created exclusively for portfolio demonstration purposes.
+            </p>
+          </div>
+
+          <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-slate-600'">
+            Delta Air Lines operates under high-volume traffic exceeding <strong>10,000+ monthly operational tickets</strong> spanning unpredictable problem categories. The underlying machine learning architecture (<strong>LinearSVC</strong> with TF-IDF, <strong>90.7% accuracy / 0.906 F1</strong>), daily automated retraining pipeline, and cloud REST API inference accurately model the intent-capture and automated routing system engineered by Edwin Lin to eliminate manual triage and cleanly direct tickets to specialized resolution teams.
+          </p>
+
+          <p [class]="theme() === 'dark' ? 'text-slate-400 text-xs' : 'text-slate-500 text-xs'">
+            🔒 <em>No proprietary Delta Air Lines operational data, internal customer records, or confidential business credentials are stored or exposed.</em>
+          </p>
+        </div>
+
+        <!-- Action Button -->
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-4">
+          <span class="font-mono text-[10px] text-slate-500">
+            DELTA AIR LINES // EDWIN LIN PORTFOLIO
+          </span>
+          <button
+            type="button"
+            (click)="closeDisclaimer()"
+            class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono text-xs font-bold transition-all shadow-lg shadow-amber-500/20 flex items-center gap-2 cursor-pointer">
+            <svg class="w-4 h-4 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span>ACKNOWLEDGE & ENTER DEMO</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</div>
