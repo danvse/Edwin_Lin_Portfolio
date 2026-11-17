@@ -1,4 +1,4 @@
-import { Component, computed, output, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 export interface ModelBenchmark {
@@ -29,6 +29,9 @@ export interface StreamBHeuristics {
 })
 export class DiscordDemo {
   readonly close = output<void>();
+
+  // Theme input passed down from root App component
+  readonly theme = input<'dark' | 'light'>('light');
 
   // Interactive sample payload tester state
   protected readonly activeInput = signal<string>(

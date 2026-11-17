@@ -272,14 +272,14 @@
 <!-- INTERACTIVE DELTA OPERATIONS DASHBOARD MODAL/VIEW             -->
 <!-- ============================================================= -->
 @if (activeDemo() === 'delta') {
-  <app-ticket-dashboard (close)="closeDemo()" />
+  <app-ticket-dashboard [themeInput]="theme()" (close)="closeDemo()" />
 }
 
 <!-- ============================================================= -->
 <!-- INTERACTIVE DISCORD PHISHING DEFENSE SANDBOX MODAL/VIEW       -->
 <!-- ============================================================= -->
 @if (activeDemo() === 'discord') {
-  <app-discord-demo (close)="closeDemo()" />
+  <app-discord-demo [theme]="theme()" (close)="closeDemo()" />
 }
 
 <!-- ============================================================= -->

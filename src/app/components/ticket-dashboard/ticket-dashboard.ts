@@ -1,4 +1,4 @@
-import { Component, computed, output, signal } from '@angular/core';
+import { Component, computed, effect, input, output, signal } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 
 export interface ServiceTicket {
@@ -32,8 +32,17 @@ export interface StationData {
 export class TicketDashboard {
   readonly close = output<void>();
 
-  // Theme signal: Light or Dark mode (defaults to 'light')
+  // Theme input from parent App component
+  readonly themeInput = input<'dark' | 'light'>('light');
+
+  // Theme signal: Light or Dark mode (defaults to 'light', synced with themeInput)
   protected readonly theme = signal<'dark' | 'light'>('light');
+
+  constructor() {
+    effect(() => {
+      this.theme.set(this.themeInput());
+    });
+  }
 
   // Filter signals
   protected readonly selectedStation = signal<string>('ALL');
