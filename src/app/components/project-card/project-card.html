@@ -158,7 +158,7 @@
             <path d="M3 22v-6h6"/>
             <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
           </svg>
-          <span>FLIP FOR CASE STUDY</span>
+          <span>FLIP FOR MORE DETAILS</span>
         </button>
       </div>
     </div>
@@ -177,7 +177,7 @@
       <div [class]="theme() === 'dark' ? 'flex items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-6' : 'flex items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6'">
         <div>
           <span class="font-mono text-xs font-bold tracking-wider" [class]="project().specification?.includes('POC') ? 'text-amber-400' : 'text-sky-500'">
-            {{ project().specification?.includes('POC') ? 'RESEARCH PROOF OF CONCEPT (POC)' : 'ENGINEERING CASE STUDY' }}
+            {{ project().specification?.includes('POC') ? 'RESEARCH PROOF OF CONCEPT (POC)' : 'ENGINEERING TECHNICAL BREAKDOWN' }}
           </span>
           <h3 [class]="theme() === 'dark' ? 'text-xl md:text-2xl font-bold text-white' : 'text-xl md:text-2xl font-bold text-slate-900'">{{ project().callsign }}</h3>
         </div>
