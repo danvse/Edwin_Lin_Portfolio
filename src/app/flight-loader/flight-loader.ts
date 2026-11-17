@@ -37,27 +37,45 @@ export class FlightLoader implements OnDestroy {
 
   private readonly containerRef = viewChild.required<ElementRef<HTMLDivElement>>('container');
   private anim?: AnimationItem;
+  private safetyTimer?: ReturnType<typeof setTimeout>;
 
   constructor() {
     afterNextRender(() => {
+      // Respect <base href> dynamically so it resolves properly on GitHub Pages subpaths or root domain
+      const baseEl = typeof document !== 'undefined' ? document.querySelector('base') : null;
+      const baseHref = baseEl ? baseEl.getAttribute('href') || '/' : '/';
+      const cleanBase = baseHref.endsWith('/') ? baseHref : baseHref + '/';
+      const jsonPath = `${cleanBase}flight-loader.json`;
+
       this.anim = lottie.loadAnimation({
         container: this.containerRef().nativeElement,
         renderer: 'svg',
         loop: false,
         autoplay: true,
-        path: '/flight-loader.json',
+        path: jsonPath,
       });
 
       // Double speed to complete all 180 frames in exactly 1.5s (3.0s / 2.0 = 1.5s)
       this.anim.setSpeed(2.0);
 
-      this.anim.addEventListener('complete', () => {
+      // Failsafe timeout: ensures transition never hangs if network drops or file fails to load
+      this.safetyTimer = setTimeout(() => {
         this.completed.emit();
-      });
+      }, 2200);
+
+      const finish = () => {
+        if (this.safetyTimer) clearTimeout(this.safetyTimer);
+        this.completed.emit();
+      };
+
+      this.anim.addEventListener('complete', finish);
+      this.anim.addEventListener('data_failed', finish);
+      this.anim.addEventListener('error', finish);
     });
   }
 
   ngOnDestroy(): void {
+    if (this.safetyTimer) clearTimeout(this.safetyTimer);
     this.anim?.destroy();
   }
 }
