@@ -1,5 +1,4 @@
 import { afterNextRender, Component, effect, ElementRef, signal, viewChild } from '@angular/core';
-import { FlightBackground } from './components/flight-background/flight-background';
 import { ProjectCard } from './components/project-card/project-card';
 import { TicketDashboard } from './components/ticket-dashboard/ticket-dashboard';
 import { DiscordDemo } from './components/discord-demo/discord-demo';
@@ -8,7 +7,7 @@ import { ProjectFlight } from './models/project.model';
 
 @Component({
   selector: 'app-root',
-  imports: [FlightBackground, ProjectCard, TicketDashboard, DiscordDemo, FlightLoader],
+  imports: [ProjectCard, TicketDashboard, DiscordDemo, FlightLoader],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

@@ -1,9 +1,37 @@
 @use "tailwindcss";
 
-/* Root Scroll Configuration: exactly one scroll context */
+@theme {
+  /* Heart Aerospace Color Tokens */
+  --color-stratosphere: #716e85;
+  --color-jetstream-blue: #001489;
+  --color-onyx: #000000;
+  --color-cloud: #ffffff;
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-display: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Type Scale */
+  --text-display: clamp(3.5rem, 9vw, 9.75rem); /* up to 156px */
+  --text-heading-sm: clamp(1.75rem, 4vw, 2.875rem); /* up to 46px */
+  --text-body: 1.125rem; /* 18px */
+}
+
+:root {
+  --color-stratosphere: #716e85;
+  --color-jetstream-blue: #001489;
+  --color-onyx: #000000;
+  --color-cloud: #ffffff;
+}
+
+/* Root Scroll Configuration */
 html {
   overflow-x: hidden;
   overflow-y: auto;
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: #000000;
 }
 
 body {
@@ -12,23 +40,64 @@ body {
   overflow-x: hidden;
   overflow-y: visible;
   min-height: 100vh;
+  background-color: #ffffff;
 }
 
-/* Custom Sleek Aviation Scrollbar */
+/* Heart Aerospace Ghost Action Class */
+.ghost-action {
+  border: 1.5px solid #001489;
+  background: transparent;
+  color: #000000;
+  border-radius: 0px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ghost-action:hover {
+  background: #001489;
+  color: #ffffff;
+}
+
+.ghost-action-cloud {
+  border: 1.5px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  border-radius: 0px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ghost-action-cloud:hover {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Minimalist Industrial Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.4);
+  background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.35);
-  border-radius: 9999px;
+  background: #716e85;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.7);
+  background: #001489;
 }
