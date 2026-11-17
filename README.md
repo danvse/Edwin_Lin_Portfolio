@@ -70,10 +70,10 @@
 ### Installation
 ```bash
 # Clone repository
-git clone https://github.com/danvse/aerofolio.git
+git clone https://github.com/danvse/Edwin_Lin_Portfolio.git
 
 # Enter project directory
-cd aerofolio
+cd Edwin_Lin_Portfolio
 
 # Install dependencies
 npm install
