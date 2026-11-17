@@ -33,8 +33,8 @@
 - **Domain:** Enterprise Full-Stack / Developer Productivity
 - **Core Stack:** Angular 18/22, TypeScript, Playwright, GitLab CI/CD, WCAG AAA Accessibility
 - **Highlights:**
-  - Architected an approval delegation subsystem resolving strict hierarchy blocks for multi-tier enterprise approval routing.
-  - Redesigned and parallelized a 200+ Playwright E2E test suite in GitLab CI/CD, slashing pipeline test duration from **5 hours down to 40 minutes (87% speedup)** while eliminating test flakiness.
+  - Improved approval delegation features in Angular for Delta's ResourceHub hiring platform to resolve strict hierarchy blocks.
+  - Redesigned and parallelized a 200+ Playwright E2E test suite in GitLab CI/CD, slashing test execution time from **3-5 hours down to 40 minutes (87% speedup)** while eliminating test flakiness.
   - Redesigned dark-mode UI with high-contrast WCAG AAA compliance.
 
 ### 3. Flight ML-770: Dual-Stream Adversarial Discord Phishing Defense
