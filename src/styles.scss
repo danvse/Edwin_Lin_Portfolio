@@ -15,9 +15,9 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Type Scale */
-  --text-display: clamp(3.5rem, 9vw, 9.75rem); /* up to 156px */
-  --text-heading-sm: clamp(1.75rem, 4vw, 2.875rem); /* up to 46px */
-  --text-body: 1.125rem; /* 18px */
+  --text-display: clamp(2.25rem, 5vw, 4.25rem); /* Refined, elegant heading scale (36px - 68px) */
+  --text-heading-sm: clamp(1.5rem, 3.5vw, 2.25rem);
+  --text-body: 1.0625rem; /* 17px */
 }
 
 :root {
