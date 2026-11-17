@@ -8,7 +8,7 @@
   <!-- ============================================================= -->
   <section class="relative min-h-[92vh] flex flex-col justify-between overflow-hidden border-b border-black/15">
     
-    <!-- Seamless Looping Airplane Video Background -->
+    <!-- Seamless Looping Airplane Video Background with Hardware Parallax -->
     <video
       #heroVideo
       autoplay
@@ -18,7 +18,8 @@
       preload="auto"
       [muted]="true"
       (ended)="$any($event.target).play()"
-      class="absolute inset-0 w-full h-full object-cover pointer-events-none opacity-60 dark:opacity-45 transition-opacity"
+      class="absolute -top-[10%] inset-x-0 w-full h-[125%] object-cover pointer-events-none opacity-60 dark:opacity-45 transition-opacity"
+      style="transform: translateY(calc(var(--scroll-offset, 0px) * 0.32)); will-change: transform;"
       src="airplane-loop.mp4">
     </video>
 
@@ -28,7 +29,7 @@
       : 'absolute inset-0 bg-gradient-to-b from-[#716e85]/90 via-[#716e85]/40 via-65% to-white pointer-events-none'"></div>
 
     <!-- Transparent Hero Navigation (Zero border, zero radius) -->
-    <header class="relative z-20 flex flex-wrap items-center justify-between gap-6 px-6 md:px-14 lg:px-20 py-8">
+    <header class="relative z-20 flex flex-wrap items-center justify-between gap-6 px-6 md:px-14 lg:px-20 py-8 animate-hero-fade">
       
       <!-- Brand Wordmark + Aircraft Symbol -->
       <div class="flex items-center gap-3">
@@ -68,23 +69,23 @@
       <div class="max-w-6xl">
         
         <!-- Aerospace Meta Badge -->
-        <div class="inline-flex items-center gap-2 mb-6 text-white/90 font-mono text-xs tracking-[0.2em] uppercase">
+        <div class="inline-flex items-center gap-2 mb-6 text-white/90 font-mono text-xs tracking-[0.2em] uppercase animate-hero-delay-1">
           <span class="w-1.5 h-1.5 bg-emerald-400"></span>
           <span>DELTA AIR LINES CO-OP ALUMNI // GSU CS '26</span>
         </div>
 
         <!-- Monumental Display Title (Heart Aerospace Scale: 120px-156px) -->
-        <h1 class="text-display font-semibold tracking-[-0.02em] leading-none text-white uppercase break-words">
+        <h1 class="text-display font-semibold tracking-[-0.02em] leading-none text-white uppercase break-words animate-hero-delay-2">
           ENGINEERING<br>THE FLIGHTPATH.
         </h1>
 
         <!-- Engineering Manifesto Subtitle -->
-        <p class="text-body font-normal text-white/95 max-w-2xl mt-8 tracking-[-0.01em] leading-relaxed">
+        <p class="text-body font-normal text-white/95 max-w-2xl mt-8 tracking-[-0.01em] leading-relaxed animate-hero-delay-3">
           Full-stack software engineer specializing in mission-critical flight operations systems, machine learning intent classifiers, and high-performance CI/CD automation pipelines.
         </p>
 
         <!-- Outlined Ghost CTAs (Zero border-radius) -->
-        <div class="mt-10 flex flex-wrap items-center gap-4">
+        <div class="mt-10 flex flex-wrap items-center gap-4 animate-hero-delay-3">
           <button
             type="button"
             (click)="launchDemo('#dashboard')"
@@ -109,7 +110,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       
       <!-- Metric 1 -->
-      <div [class]="theme() === 'dark' ? 'p-8 md:p-10 border-b sm:border-r border-white/10' : 'p-8 md:p-10 border-b sm:border-r border-black/10'">
+      <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-1 p-8 md:p-10 border-b sm:border-r border-white/10' : 'aerospace-reveal stagger-1 p-8 md:p-10 border-b sm:border-r border-black/10'">
         <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">90.7% F1</p>
         <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">NLP Intent Routing</p>
         <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
@@ -118,7 +119,7 @@
       </div>
 
       <!-- Metric 2 -->
-      <div [class]="theme() === 'dark' ? 'p-8 md:p-10 border-b lg:border-r border-white/10' : 'p-8 md:p-10 border-b lg:border-r border-black/10'">
+      <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-2 p-8 md:p-10 border-b lg:border-r border-white/10' : 'aerospace-reveal stagger-2 p-8 md:p-10 border-b lg:border-r border-black/10'">
         <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">87% SPEEDUP</p>
         <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">CI/CD Pipeline Acceleration</p>
         <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
@@ -127,7 +128,7 @@
       </div>
 
       <!-- Metric 3 -->
-      <div [class]="theme() === 'dark' ? 'p-8 md:p-10 border-b sm:border-r border-white/10' : 'p-8 md:p-10 border-b sm:border-r border-black/10'">
+      <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-3 p-8 md:p-10 border-b sm:border-r border-white/10' : 'aerospace-reveal stagger-3 p-8 md:p-10 border-b sm:border-r border-black/10'">
         <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">1.2 MS</p>
         <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">Real-Time CPU Inference</p>
         <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
@@ -136,7 +137,7 @@
       </div>
 
       <!-- Metric 4 -->
-      <div class="p-8 md:p-10">
+      <div class="aerospace-reveal stagger-4 p-8 md:p-10">
         <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">3.7 / 4.0</p>
         <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">Georgia State University</p>
         <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
@@ -153,7 +154,7 @@
   <section id="manifest" [class]="theme() === 'dark' ? 'bg-black text-white py-20 px-6 md:px-14 lg:px-20 border-b border-white/10' : 'bg-white text-black py-20 px-6 md:px-14 lg:px-20 border-b border-black/10'">
     
     <!-- Section Title (Heart Aerospace 46px NeueHaas style) -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-black/10 dark:border-white/10">
+    <div class="aerospace-reveal flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-black/10 dark:border-white/10">
       <div>
         <span class="font-mono text-xs uppercase tracking-[0.2em] text-[#001489] dark:text-sky-400 font-bold block mb-2">
           ENGINEERING ARCHITECTURE // MANIFEST
@@ -171,7 +172,9 @@
     <div class="relative">
       <div class="space-y-12">
         @for (flight of projects(); track flight.id) {
-          <app-project-card [project]="flight" [theme]="theme()" (launchDemo)="launchDemo($event)" />
+          <div class="aerospace-reveal">
+            <app-project-card [project]="flight" [theme]="theme()" (launchDemo)="launchDemo($event)" />
+          </div>
         }
       </div>
     </div>
@@ -185,7 +188,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 pb-16 border-b border-white/15">
       
       <!-- Col 1: Systems Navigation -->
-      <div>
+      <div class="aerospace-reveal stagger-1">
         <h4 class="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-6">
           SYSTEMS
         </h4>
@@ -214,7 +217,7 @@
       </div>
 
       <!-- Col 2: Communications & Socials -->
-      <div>
+      <div class="aerospace-reveal stagger-2">
         <h4 class="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-6">
           COMMUNICATIONS
         </h4>
@@ -243,7 +246,7 @@
       </div>
 
       <!-- Col 3: Coordinates & Location -->
-      <div>
+      <div class="aerospace-reveal stagger-3">
         <h4 class="font-mono text-xs font-semibold tracking-[0.2em] uppercase text-white/50 mb-6">
           COORDINATES
         </h4>
@@ -274,20 +277,19 @@
     </div>
   </footer>
 
-  <!-- ============================================================= -->
-  <!-- 5. AIRPLANE TAKEOFF TRANSITION OVERLAY (LOTTIE FLIGHT LOADER) -->
-  <!-- ============================================================= -->
-  @if (isTransitioning()) {
-    <div 
-      class="takeoff-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md transition-opacity duration-300 pointer-events-none"
-      [class.opacity-0]="isFadingOut()"
-      [class.opacity-100]="!isFadingOut()">
-      
-      <app-flight-loader (completed)="onTakeoffComplete()" />
-    </div>
-  }
-
 </main>
+
+<!-- ============================================================= -->
+<!-- 5. AIRPLANE TAKEOFF TRANSITION OVERLAY (LOTTIE FLIGHT LOADER) -->
+<!-- ============================================================= -->
+@if (isTransitioning()) {
+  <div 
+    class="takeoff-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md transition-opacity duration-300"
+    [class.opacity-0]="isFadingOut()"
+    [class.opacity-100]="!isFadingOut()">
+    <app-flight-loader (completed)="onTakeoffComplete()" />
+  </div>
+}
 
 <!-- ============================================================= -->
 <!-- INTERACTIVE DELTA OPERATIONS DASHBOARD MODAL/VIEW             -->

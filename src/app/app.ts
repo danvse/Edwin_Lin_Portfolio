@@ -33,12 +33,39 @@ export class App {
   private readonly heroVideo = viewChild<ElementRef<HTMLVideoElement>>('heroVideo');
 
   constructor() {
-    // Ensure continuous, seamless playback of background video across all browsers
     afterNextRender(() => {
+      // 1. Ensure continuous, seamless playback of background video
       const vid = this.heroVideo()?.nativeElement;
       if (vid) {
         vid.muted = true;
         vid.play().catch(() => {});
+      }
+
+      // 2. Hardware-accelerated parallax scroll handler
+      if (typeof window !== 'undefined') {
+        const handleScroll = () => {
+          document.documentElement.style.setProperty('--scroll-offset', `${window.scrollY}px`);
+        };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+      }
+
+      // 3. IntersectionObserver for industrial scroll reveals
+      if (typeof IntersectionObserver !== 'undefined') {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        document.querySelectorAll('.aerospace-reveal').forEach((el) => {
+          observer.observe(el);
+        });
       }
     });
 
