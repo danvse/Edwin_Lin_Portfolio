@@ -20,6 +20,39 @@
   }
 }
 
+// 50 US State Shapes & Borders
+.state-shape-dark {
+  fill: #090e1a;
+  stroke: rgba(56, 189, 248, 0.3);
+  stroke-width: 0.75;
+  cursor: pointer;
+  transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+
+  &:hover,
+  &.state-hovered {
+    fill: rgba(56, 189, 248, 0.22);
+    stroke: #38bdf8;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
+  }
+}
+
+.state-shape-light {
+  fill: #f1f5f9;
+  stroke: rgba(0, 20, 137, 0.28);
+  stroke-width: 0.75;
+  cursor: pointer;
+  transition: fill 0.2s ease, stroke 0.2s ease, filter 0.2s ease;
+
+  &:hover,
+  &.state-hovered {
+    fill: rgba(0, 20, 137, 0.12);
+    stroke: #001489;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 0 6px rgba(0, 20, 137, 0.3));
+  }
+}
+
 // Radar sweep rotation inside the dynamic hub group
 .hub-nautical-rings .radar-sweep-blade {
   transform-origin: 0 0;

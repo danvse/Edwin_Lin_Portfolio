@@ -23,11 +23,11 @@
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 bg-emerald-400 animate-pulse"></span>
           <h1 class="font-mono text-xs uppercase tracking-[0.2em] font-bold">
-            US AIRSPACE OPERATIONS RADAR // TACTICAL TELEMETRY GRID
+            US AIRSPACE OPERATIONS RADAR // 50-STATE TACTICAL MAP
           </h1>
         </div>
         <p class="font-mono text-[10px] text-slate-400 tracking-wider">
-          LIVE DELTA AIR LINES &bull; 13 STRATEGIC HUBS &bull; CONTINENTAL FLIGHT TELEMETRY
+          ALL 50 US STATES &bull; FAA AIRSPACE INFRASTRUCTURE &bull; 20 STRATEGIC AIRLINE HUBS
         </p>
       </div>
     </div>
@@ -41,7 +41,7 @@
         </div>
         <div>
           <span class="text-slate-400 block text-[9px] uppercase tracking-wider">ACTIVE IN-FLIGHT</span>
-          <span [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-bold'">284 AIRCRAFT</span>
+          <span [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-bold'">342 AIRCRAFT</span>
         </div>
         <div>
           <span class="text-slate-400 block text-[9px] uppercase tracking-wider">ML INTENT CLASSIFIER</span>
@@ -107,7 +107,7 @@
       <svg 
         #mapSvg
         class="w-full h-full max-h-[85vh] transition-transform duration-500" 
-        viewBox="0 0 1000 640" 
+        viewBox="0 0 960 600" 
         preserveAspectRatio="xMidYMid meet">
         
         <defs>
@@ -139,142 +139,105 @@
           </radialGradient>
         </defs>
 
-        <!-- ============================================================= -->
-        <!-- AERONAUTICAL CHART GRATICULE PERIMETER & COORDINATE LABELS    -->
-        <!-- ============================================================= -->
-        <g class="chart-graticule-border pointer-events-none" [attr.stroke]="theme() === 'dark' ? '#334155' : '#cbd5e1'" stroke-width="0.75">
-          <!-- Border Rect -->
-          <rect x="25" y="25" width="950" height="590" fill="none" stroke-width="1" />
-          
-          <!-- Longitude Perimeter Ticks (Top & Bottom) -->
-          <!-- 120W (160), 110W (300), 100W (445), 90W (590), 80W (735), 70W (875) -->
-          <line x1="160" y1="20" x2="160" y2="25" />
-          <line x1="160" y1="615" x2="160" y2="620" />
-          <text x="160" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">120°W</text>
-          <text x="160" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">120°W</text>
-
-          <line x1="300" y1="20" x2="300" y2="25" />
-          <line x1="300" y1="615" x2="300" y2="620" />
-          <text x="300" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">110°W</text>
-          <text x="300" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">110°W</text>
-
-          <line x1="445" y1="20" x2="445" y2="25" />
-          <line x1="445" y1="615" x2="445" y2="620" />
-          <text x="445" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">100°W</text>
-          <text x="445" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">100°W</text>
-
-          <line x1="590" y1="20" x2="590" y2="25" />
-          <line x1="590" y1="615" x2="590" y2="620" />
-          <text x="590" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">90°W</text>
-          <text x="590" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">90°W</text>
-
-          <line x1="735" y1="20" x2="735" y2="25" />
-          <line x1="735" y1="615" x2="735" y2="620" />
-          <text x="735" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">80°W</text>
-          <text x="735" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">80°W</text>
-
-          <line x1="875" y1="20" x2="875" y2="25" />
-          <line x1="875" y1="615" x2="875" y2="620" />
-          <text x="875" y="18" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">70°W</text>
-          <text x="875" y="628" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="middle" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">70°W</text>
-
-          <!-- Latitude Perimeter Ticks (Left & Right) -->
-          <!-- 45N (170), 40N (270), 35N (370), 30N (465), 25N (560) -->
-          <line x1="20" y1="170" x2="25" y2="170" />
-          <line x1="975" y1="170" x2="980" y2="170" />
-          <text x="18" y="173" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="end" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">45°N</text>
-          <text x="983" y="173" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="start" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">45°N</text>
-
-          <line x1="20" y1="270" x2="25" y2="270" />
-          <line x1="975" y1="270" x2="980" y2="270" />
-          <text x="18" y="273" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="end" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">40°N</text>
-          <text x="983" y="273" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="start" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">40°N</text>
-
-          <line x1="20" y1="370" x2="25" y2="370" />
-          <line x1="975" y1="370" x2="980" y2="370" />
-          <text x="18" y="373" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="end" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">35°N</text>
-          <text x="983" y="373" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="start" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">35°N</text>
-
-          <line x1="20" y1="465" x2="25" y2="465" />
-          <line x1="975" y1="465" x2="980" y2="465" />
-          <text x="18" y="468" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="end" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">30°N</text>
-          <text x="983" y="468" font-family="'JetBrains Mono', monospace" font-size="7.5" text-anchor="start" [attr.fill]="theme() === 'dark' ? '#64748b' : '#94a3b8'">30°N</text>
-        </g>
-
         <!-- Coordinate Grid Parallels (Lat / Lon lines) -->
-        <g class="coordinate-grid opacity-20 pointer-events-none" [attr.stroke]="theme() === 'dark' ? '#94a3b8' : '#64748b'" stroke-width="0.75" stroke-dasharray="3,6">
-          <line x1="25" y1="170" x2="975" y2="170" />
-          <line x1="25" y1="270" x2="975" y2="270" />
-          <line x1="25" y1="370" x2="975" y2="370" />
-          <line x1="25" y1="465" x2="975" y2="465" />
-          <line x1="25" y1="560" x2="975" y2="560" />
+        <g class="coordinate-grid opacity-15 pointer-events-none" [attr.stroke]="theme() === 'dark' ? '#94a3b8' : '#64748b'" stroke-width="0.75" stroke-dasharray="3,6">
+          <line x1="15" y1="120" x2="945" y2="120" />
+          <line x1="15" y1="240" x2="945" y2="240" />
+          <line x1="15" y1="360" x2="945" y2="360" />
+          <line x1="15" y1="480" x2="945" y2="480" />
 
-          <line x1="160" y1="25" x2="160" y2="615" />
-          <line x1="300" y1="25" x2="300" y2="615" />
-          <line x1="445" y1="25" x2="445" y2="615" />
-          <line x1="590" y1="25" x2="590" y2="615" />
-          <line x1="735" y1="25" x2="735" y2="615" />
-          <line x1="875" y1="25" x2="875" y2="615" />
+          <line x1="160" y1="15" x2="160" y2="585" />
+          <line x1="320" y1="15" x2="320" y2="585" />
+          <line x1="480" y1="15" x2="480" y2="585" />
+          <line x1="640" y1="15" x2="640" y2="585" />
+          <line x1="800" y1="15" x2="800" y2="585" />
         </g>
 
         <!-- Tactical Compass Rose (Top-Right) -->
-        <g class="tactical-compass pointer-events-none" transform="translate(920, 65)">
-          <circle r="18" fill="none" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" stroke-dasharray="2,3" />
-          <line x1="0" y1="-22" x2="0" y2="22" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" />
-          <line x1="-22" y1="0" x2="22" y2="0" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" />
-          <!-- True North Arrow Pointer -->
-          <polygon points="0,-16 3,-5 0,-8 -3,-5" fill="#38bdf8" />
-          <text x="0" y="-24" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="bold" text-anchor="middle" fill="#38bdf8">N</text>
+        <g class="tactical-compass pointer-events-none" transform="translate(890, 50)">
+          <circle r="16" fill="none" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" stroke-dasharray="2,3" />
+          <line x1="0" y1="-20" x2="0" y2="20" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" />
+          <line x1="-20" y1="0" x2="20" y2="0" [attr.stroke]="theme() === 'dark' ? '#475569' : '#94a3b8'" stroke-width="0.75" />
+          <polygon points="0,-14 3,-5 0,-7 -3,-5" fill="#38bdf8" />
+          <text x="0" y="-22" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="bold" text-anchor="middle" fill="#38bdf8">N</text>
         </g>
 
         <!-- Dynamic Concentric Nautical Mile Range Rings centered on current selected Hub -->
         @if (activeLayer() === 'all' || activeLayer() === 'radar') {
           <g class="hub-nautical-rings pointer-events-none" [attr.transform]="'translate(' + currentHub().x + ',' + currentHub().y + ')'">
             <!-- 250 NM Ring -->
-            <circle r="80" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.35" stroke-dasharray="3,4" />
-            <text x="82" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.6">250 NM</text>
+            <circle r="75" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.35" stroke-dasharray="3,4" />
+            <text x="77" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.6">250 NM</text>
 
             <!-- 500 NM Ring -->
-            <circle r="160" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.25" stroke-dasharray="4,6" />
-            <text x="162" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.5">500 NM</text>
+            <circle r="150" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.25" stroke-dasharray="4,6" />
+            <text x="152" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.5">500 NM</text>
 
             <!-- 1000 NM Ring -->
-            <circle r="290" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.18" stroke-dasharray="5,8" />
-            <text x="292" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.4">1000 NM</text>
+            <circle r="270" stroke="#38bdf8" stroke-width="0.75" fill="none" opacity="0.18" stroke-dasharray="5,8" />
+            <text x="272" y="-4" font-family="'JetBrains Mono', monospace" font-size="7" fill="#38bdf8" opacity="0.4">1000 NM</text>
 
             <!-- Radial Crosshair Axes -->
-            <line x1="-310" y1="0" x2="310" y2="0" stroke="#38bdf8" stroke-width="0.5" opacity="0.2" stroke-dasharray="2,6" />
-            <line x1="0" y1="-310" x2="0" y2="310" stroke="#38bdf8" stroke-width="0.5" opacity="0.2" stroke-dasharray="2,6" />
+            <line x1="-290" y1="0" x2="290" y2="0" stroke="#38bdf8" stroke-width="0.5" opacity="0.2" stroke-dasharray="2,6" />
+            <line x1="0" y1="-290" x2="0" y2="290" stroke="#38bdf8" stroke-width="0.5" opacity="0.2" stroke-dasharray="2,6" />
 
             <!-- Rotating Radar Sweep Cone originating from Hub -->
-            <line x1="0" y1="0" x2="300" y2="0" class="radar-sweep-blade" stroke-width="1.2" stroke="#38bdf8" opacity="0.5" />
+            <line x1="0" y1="0" x2="280" y2="0" class="radar-sweep-blade" stroke-width="1.2" stroke="#38bdf8" opacity="0.5" />
           </g>
         }
 
         <!-- ============================================================= -->
-        <!-- CONTINENTAL US VECTOR LANDMASS & BOUNDARIES                   -->
+        <!-- INDIVIDUAL 50 US STATE SHAPES & BORDERS                       -->
         <!-- ============================================================= -->
-        <g id="us-landmass" [class]="theme() === 'dark' ? 'fill-slate-900/80 stroke-slate-700/80' : 'fill-slate-200/90 stroke-slate-300'" stroke-width="1.2">
-          
-          <!-- Continental United States Outer Coastline & National Border -->
-          <path 
-            class="transition-colors duration-300"
-            d="M 125,95 
-               L 165,95 L 205,100 L 290,105 L 360,110 L 460,115 L 530,120 L 590,135 L 610,120 L 640,115 L 670,140 L 705,145 L 740,130 L 770,150 L 810,135 L 850,140 L 890,110 L 920,130 L 925,160 L 905,190 L 895,225 L 870,240 L 840,270 L 825,310 L 815,355 L 795,380 L 805,430 L 825,480 L 830,545 L 815,575 L 795,550 L 760,495 L 735,475 L 690,470 L 655,475 L 630,480 L 590,485 L 565,510 L 545,545 L 515,580 L 485,555 L 450,520 L 410,485 L 350,470 L 305,465 L 245,460 L 195,455 L 155,445 L 125,410 L 95,370 L 75,320 L 85,250 L 95,190 L 105,140 Z" />
-
-          <!-- Internal Regional Airspace Boundary Dividers -->
-          <g stroke-width="0.75" [attr.stroke]="theme() === 'dark' ? '#334155' : '#cbd5e1'" stroke-dasharray="2,3" fill="none">
-            <!-- Pacific / Mountain Airspace Boundary -->
-            <path d="M 210,100 L 210,240 L 180,330 L 180,450" />
-            <!-- Mountain / Central Airspace Boundary -->
-            <path d="M 440,115 L 440,280 L 460,370 L 460,500" />
-            <!-- Central / Eastern Airspace Boundary -->
-            <path d="M 680,140 L 680,270 L 690,380 L 690,470" />
-            <!-- Great Lakes Coastline Indentations -->
-            <path d="M 590,135 Q 630,170 660,150 Q 700,185 740,165" />
-          </g>
-
+        <g id="us-states-layer">
+          @for (state of usStates; track state.id) {
+            <path 
+              [attr.d]="state.pathD" 
+              [attr.id]="'state-' + state.id"
+              (mouseenter)="hoverState(state)"
+              (mouseleave)="hoverState(null)"
+              [class]="theme() === 'dark' ? 'state-shape-dark' : 'state-shape-light'"
+              [class.state-hovered]="hoveredState()?.id === state.id">
+              <title>{{ state.name }} ({{ state.id }})</title>
+            </path>
+          }
         </g>
+
+        <!-- ============================================================= -->
+        <!-- LAYER: FAA ARTCC AIRSPACE SECTOR CENTERS                      -->
+        <!-- ============================================================= -->
+        @if (activeLayer() === 'all' || activeLayer() === 'radar') {
+          <g class="artcc-sectors-group pointer-events-none" opacity="0.45">
+            @for (sec of artccSectors; track sec.code) {
+              <g [attr.transform]="'translate(' + sec.x + ',' + sec.y + ')'">
+                <circle r="2" fill="#38bdf8" />
+                <line x1="-5" y1="0" x2="5" y2="0" stroke="#38bdf8" stroke-width="0.5" />
+                <line x1="0" y1="-5" x2="0" y2="5" stroke="#38bdf8" stroke-width="0.5" />
+                <text x="7" y="3" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="bold" fill="#38bdf8">
+                  {{ sec.code }}
+                </text>
+              </g>
+            }
+          </g>
+        }
+
+        <!-- ============================================================= -->
+        <!-- LAYER: ENROUTE VOR NAVIGATIONAL FIXES / WAYPOINTS             -->
+        <!-- ============================================================= -->
+        @if (activeLayer() === 'all' || activeLayer() === 'flights' || activeLayer() === 'radar') {
+          <g class="enroute-fixes-group pointer-events-none" opacity="0.5">
+            @for (fix of enrouteFixes; track fix.code) {
+              <g [attr.transform]="'translate(' + fix.x + ',' + fix.y + ')'">
+                <!-- VOR Diamond Icon -->
+                <polygon points="0,-3 3,0 0,3 -3,0" fill="none" stroke="#38bdf8" stroke-width="0.6" />
+                <!-- Identifier Tag -->
+                <text x="5" y="2.5" font-family="'JetBrains Mono', monospace" font-size="6" [attr.fill]="theme() === 'dark' ? '#94a3b8' : '#64748b'">
+                  {{ fix.code }}
+                </text>
+              </g>
+            }
+          </g>
+        }
 
         <!-- ============================================================= -->
         <!-- LAYER: FLIGHT CORRIDORS (BEZIER ARCS)                         -->
@@ -527,6 +490,11 @@
         [style.top.px]="cursorInfo().y + 14">
         <span class="w-1.5 h-1.5 bg-sky-400 animate-ping"></span>
         <span>RADAR LAT: {{ cursorInfo().lat }} &bull; LON: {{ cursorInfo().lon }}</span>
+        @if (hoveredState(); as st) {
+          <span class="text-sky-300 font-bold ml-1 border-l border-white/20 pl-2">
+            STATE: {{ st.name | uppercase }} ({{ st.id }})
+          </span>
+        }
       </div>
     }
 
@@ -616,12 +584,12 @@
               type="text" 
               [value]="hubSearchQuery()" 
               (input)="onSearchInput($event)"
-              placeholder="Filter hubs (e.g. ATL, JFK, LAX)..." 
+              placeholder="Filter 20 hubs (e.g. ATL, PHX, LAS, CLT)..." 
               [class]="theme() === 'dark' ? 'w-full px-3 py-1.5 text-xs font-mono bg-white/5 border border-white/20 text-white placeholder-slate-500 focus:outline-none focus:border-sky-400' : 'w-full px-3 py-1.5 text-xs font-mono bg-black/5 border border-black/20 text-black placeholder-slate-400 focus:outline-none focus:border-[#001489]'" />
           </div>
 
-          <!-- Quick Hub Pills Strip -->
-          <div class="flex flex-wrap gap-1 mb-5">
+          <!-- Quick Hub Pills Strip (Scrollable) -->
+          <div class="flex flex-wrap gap-1 mb-5 max-h-24 overflow-y-auto">
             @for (h of filteredHubs(); track h.id) {
               <button 
                 type="button" 
