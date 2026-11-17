@@ -113,27 +113,29 @@
           <!-- The Physical Badge Card (Clickable to open About Me Dossier) -->
           <div 
             (click)="openAbout()"
-            class="crew-nametag-card w-64 p-4 rounded-none bg-white text-black border border-black shadow-2xl relative overflow-hidden cursor-pointer group hover:border-[#001489] transition-all">
+            [class]="theme() === 'dark'
+              ? 'crew-nametag-card w-64 p-4 rounded-none bg-[#0b0f19]/95 text-white border border-white/30 shadow-2xl relative overflow-hidden cursor-pointer group hover:border-sky-400 transition-all backdrop-blur-md'
+              : 'crew-nametag-card w-64 p-4 rounded-none bg-white text-black border border-black shadow-2xl relative overflow-hidden cursor-pointer group hover:border-[#001489] transition-all'">
             
             <!-- Top Holographic Security Strip -->
             <div class="hologram-strip absolute top-0 left-0 right-0 h-1.5"></div>
 
             <!-- Top Badge Header -->
-            <div class="flex items-center justify-between gap-2 pb-2.5 border-b border-black/15 mb-3">
+            <div [class]="theme() === 'dark' ? 'border-b border-white/15' : 'border-b border-black/15'" class="flex items-center justify-between gap-2 pb-2.5 mb-3">
               <div class="flex items-center gap-1.5">
                 <!-- Delta Triangle Logo -->
-                <svg class="w-3.5 h-3.5 text-red-600 fill-current" viewBox="0 0 24 24">
+                <svg class="w-3.5 h-3.5 text-red-500 fill-current" viewBox="0 0 24 24">
                   <polygon points="12 2 2 22 22 22" />
                 </svg>
-                <span class="font-mono text-[9px] font-black tracking-widest text-[#001489] uppercase">DELTA AIR LINES</span>
+                <span [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="font-mono text-[9px] font-black tracking-widest uppercase">DELTA AIR LINES</span>
               </div>
-              <span class="px-1.5 py-0.5 border border-black text-black font-mono text-[8px] font-bold">
+              <span [class]="theme() === 'dark' ? 'border border-white/30 text-white bg-white/10' : 'border border-black text-black bg-transparent'" class="px-1.5 py-0.5 font-mono text-[8px] font-bold">
                 OPS LVL 4
               </span>
             </div>
 
             <!-- Badge Photo with RFID Chip Indicator -->
-            <div class="relative w-full aspect-[4/5] rounded-none overflow-hidden mb-3 border border-black shadow-inner group-hover:border-[#001489] transition-colors">
+            <div [class]="theme() === 'dark' ? 'border border-white/20' : 'border border-black'" class="relative w-full aspect-[4/5] rounded-none overflow-hidden mb-3 shadow-inner group-hover:border-sky-400 transition-colors">
               <img src="edwin-badge.jpg" alt="Edwin Lin - Delta Air Lines Software Engineer" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               <!-- RFID Chip Overlay -->
               <div class="absolute top-2 right-2 w-5 h-4 bg-amber-400 border border-amber-500 flex items-center justify-center shadow">
@@ -147,33 +149,33 @@
 
             <!-- Identification Details -->
             <div class="text-center mb-3">
-              <h3 class="text-lg font-bold tracking-tight text-black">
+              <h3 [class]="theme() === 'dark' ? 'text-white' : 'text-black'" class="text-lg font-bold tracking-tight">
                 EDWIN LIN
               </h3>
-              <p class="font-mono text-[10px] text-[#001489] font-semibold uppercase tracking-wider">
+              <p [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="font-mono text-[10px] font-semibold uppercase tracking-wider">
                 SOFTWARE ENGINEER CO-OP
               </p>
-              <p class="font-mono text-[9px] text-[#716e85] mt-0.5">
+              <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-[#716e85]'" class="font-mono text-[9px] mt-0.5">
                 Operations & Analytics // ATL HQ
               </p>
             </div>
 
             <!-- Simulated Barcode & Click CTA -->
-            <div class="pt-2 border-t border-black/15">
+            <div [class]="theme() === 'dark' ? 'border-t border-white/15' : 'border-t border-black/15'" class="pt-2">
               <div class="h-6 w-full flex items-center justify-center gap-0.5 opacity-60 mb-1.5">
-                <div class="w-1 h-full bg-black"></div>
-                <div class="w-0.5 h-full bg-black"></div>
-                <div class="w-2 h-full bg-black"></div>
-                <div class="w-0.5 h-full bg-black"></div>
-                <div class="w-1.5 h-full bg-black"></div>
-                <div class="w-1 h-full bg-black"></div>
-                <div class="w-2.5 h-full bg-black"></div>
-                <div class="w-0.5 h-full bg-black"></div>
-                <div class="w-1.5 h-full bg-black"></div>
-                <div class="w-2 h-full bg-black"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-1 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-0.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-2 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-0.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-1.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-1 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-2.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-0.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-1.5 h-full"></div>
+                <div [class]="theme() === 'dark' ? 'bg-slate-300' : 'bg-black'" class="w-2 h-full"></div>
               </div>
               <div class="text-center">
-                <span class="font-mono text-[9px] text-[#001489] font-bold group-hover:underline flex items-center justify-center gap-1">
+                <span [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="font-mono text-[9px] font-bold group-hover:underline flex items-center justify-center gap-1">
                   <span>VIEW DELTA CO-OP DOSSIER &rarr;</span>
                 </span>
               </div>
@@ -195,36 +197,36 @@
       
       <!-- Metric 1 -->
       <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-1 p-8 md:p-10 border-b sm:border-r border-white/10' : 'aerospace-reveal stagger-1 p-8 md:p-10 border-b sm:border-r border-black/10'">
-        <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">90.7% F1</p>
-        <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">NLP Intent Routing</p>
-        <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
+        <p [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-semibold'" class="text-3xl md:text-5xl tracking-[-0.02em]">90.7% F1</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-slate-700'" class="font-mono text-xs uppercase tracking-wider mt-2 font-bold">NLP Intent Routing</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-slate-600'" class="text-sm mt-2 leading-relaxed">
           LinearSVC classifier automated triage across 10,000+ monthly Delta operational incident tickets.
         </p>
       </div>
 
       <!-- Metric 2 -->
       <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-2 p-8 md:p-10 border-b lg:border-r border-white/10' : 'aerospace-reveal stagger-2 p-8 md:p-10 border-b lg:border-r border-black/10'">
-        <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">87% SPEEDUP</p>
-        <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">CI/CD Pipeline Acceleration</p>
-        <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
+        <p [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-semibold'" class="text-3xl md:text-5xl tracking-[-0.02em]">87% SPEEDUP</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-slate-700'" class="font-mono text-xs uppercase tracking-wider mt-2 font-bold">CI/CD Pipeline Acceleration</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-slate-600'" class="text-sm mt-2 leading-relaxed">
           Restructured 200+ Playwright E2E tests with parallel sharding, cutting runtime from 3–5 hours to 40 minutes.
         </p>
       </div>
 
       <!-- Metric 3 -->
       <div [class]="theme() === 'dark' ? 'aerospace-reveal stagger-3 p-8 md:p-10 border-b sm:border-r border-white/10' : 'aerospace-reveal stagger-3 p-8 md:p-10 border-b sm:border-r border-black/10'">
-        <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">1.2 MS</p>
-        <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">Real-Time CPU Inference</p>
-        <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
+        <p [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-semibold'" class="text-3xl md:text-5xl tracking-[-0.02em]">1.2 MS</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-slate-700'" class="font-mono text-xs uppercase tracking-wider mt-2 font-bold">Real-Time CPU Inference</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-slate-600'" class="text-sm mt-2 leading-relaxed">
           Dual-stream 3,017-dim XGBoost pipeline resisting Cyrillic homoglyph adversarial attacks (0.9780 F1).
         </p>
       </div>
 
       <!-- Metric 4 -->
       <div class="aerospace-reveal stagger-4 p-8 md:p-10">
-        <p class="text-3xl md:text-5xl font-semibold tracking-[-0.02em] text-[#001489] dark:text-sky-400">3.7 / 4.0</p>
-        <p class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-2 font-bold">Georgia State University</p>
-        <p class="text-sm text-slate-700 dark:text-slate-300 mt-2 leading-relaxed">
+        <p [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-semibold'" class="text-3xl md:text-5xl tracking-[-0.02em]">3.7 / 4.0</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-slate-700'" class="font-mono text-xs uppercase tracking-wider mt-2 font-bold">Georgia State University</p>
+        <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-slate-600'" class="text-sm mt-2 leading-relaxed">
           B.S. in Computer Science (Dec 2026). HOPE Scholarship, President's List, QuestBridge Finalist.
         </p>
       </div>

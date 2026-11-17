@@ -3,25 +3,29 @@
   <div class="card-inner" [class.flipped]="isFlipped()" [style.height.px]="containerHeight()">
 
     <!-- ============================================================= -->
-    <!-- FRONT FACE: SYSTEM SPECIFICATION (HEART AEROSPACE SPEC)        -->
+    <!-- FRONT FACE: SYSTEM SPECIFICATION                             -->
     <!-- ============================================================= -->
     <div 
       #frontRef 
-      class="card-face card-front relative flex flex-col bg-white text-black border border-black rounded-none shadow-none overflow-hidden">
+      [class]="theme() === 'dark'
+        ? 'card-face card-front relative flex flex-col bg-[#0b0f19]/95 text-white border border-white/20 rounded-none shadow-2xl overflow-hidden backdrop-blur-md'
+        : 'card-face card-front relative flex flex-col bg-white text-black border border-black rounded-none shadow-none overflow-hidden'">
       
       <!-- Top Telemetry Strip -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-black text-xs font-mono tracking-wider bg-white">
+      <div [class]="theme() === 'dark'
+        ? 'flex items-center justify-between px-6 py-4 border-b border-white/15 text-xs font-mono tracking-wider bg-white/5 text-slate-300'
+        : 'flex items-center justify-between px-6 py-4 border-b border-black text-xs font-mono tracking-wider bg-white text-black'">
         <div class="flex items-center gap-3">
-          <span class="font-bold text-[#001489]">{{ project().flightNumber }}</span>
-          <span class="text-[#716e85]">//</span>
-          <span class="text-black font-semibold uppercase tracking-widest">{{ project().callsign }}</span>
+          <span [class]="theme() === 'dark' ? 'font-bold text-sky-400' : 'font-bold text-[#001489]'">{{ project().flightNumber }}</span>
+          <span [class]="theme() === 'dark' ? 'text-slate-500' : 'text-[#716e85]' ">//</span>
+          <span [class]="theme() === 'dark' ? 'text-white' : 'text-black'" class="font-semibold uppercase tracking-widest">{{ project().callsign }}</span>
         </div>
 
         <div class="flex items-center gap-4">
-          <span class="text-[#001489] font-semibold hidden sm:inline">
+          <span [class]="theme() === 'dark' ? 'text-sky-400 font-semibold hidden sm:inline' : 'text-[#001489] font-semibold hidden sm:inline'">
             {{ project().specification || 'VERIFIED PRODUCTION' }}
           </span>
-          <span class="border border-black px-2.5 py-0.5 font-bold uppercase tracking-widest text-[11px]">
+          <span [class]="theme() === 'dark' ? 'border border-white/30 text-white bg-white/10' : 'border border-black text-black bg-transparent'" class="px-2.5 py-0.5 font-bold uppercase tracking-widest text-[11px]">
             {{ project().status }}
           </span>
         </div>
@@ -31,56 +35,56 @@
       <div class="p-6 md:p-8 flex flex-col justify-between flex-1">
         <div>
           <!-- Flight / System Route Header -->
-          <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-6 border-b border-black/10">
+          <div [class]="theme() === 'dark' ? 'border-b border-white/15' : 'border-b border-black/10'" class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 mb-6 pb-6">
             <div>
-              <p class="font-mono text-xs text-[#716e85] uppercase tracking-widest mb-1">ORIGIN</p>
-              <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-black">{{ project().route.origin }}</h3>
+              <p [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="font-mono text-xs uppercase tracking-widest mb-1">ORIGIN</p>
+              <h3 [class]="theme() === 'dark' ? 'text-white font-bold' : 'text-black font-semibold'" class="text-2xl md:text-3xl tracking-tight">{{ project().route.origin }}</h3>
             </div>
 
             <!-- Vector Connector -->
             <div class="hidden sm:flex flex-1 items-center justify-center px-8">
               <div class="w-full flex items-center gap-2">
-                <span class="w-1.5 h-1.5 bg-[#001489]"></span>
-                <div class="flex-1 h-[1.5px] bg-[#001489]"></div>
-                <span class="font-mono text-[11px] text-[#716e85] tracking-widest uppercase px-2">DIRECT</span>
-                <div class="flex-1 h-[1.5px] bg-[#001489]"></div>
-                <svg class="w-3.5 h-3.5 text-[#001489] shrink-0 transform rotate-90" viewBox="0 0 24 24" fill="currentColor">
+                <span [class]="theme() === 'dark' ? 'bg-sky-400' : 'bg-[#001489]'" class="w-1.5 h-1.5"></span>
+                <div [class]="theme() === 'dark' ? 'bg-sky-400/60' : 'bg-[#001489]'" class="flex-1 h-[1.5px]"></div>
+                <span [class]="theme() === 'dark' ? 'text-sky-300 font-mono text-[11px] tracking-widest uppercase px-2' : 'text-[#716e85] font-mono text-[11px] tracking-widest uppercase px-2'">DIRECT</span>
+                <div [class]="theme() === 'dark' ? 'bg-sky-400/60' : 'bg-[#001489]'" class="flex-1 h-[1.5px]"></div>
+                <svg [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="w-3.5 h-3.5 shrink-0 transform rotate-90" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
                 </svg>
               </div>
             </div>
 
             <div class="sm:text-right">
-              <p class="font-mono text-xs text-[#716e85] uppercase tracking-widest mb-1">DESTINATION</p>
-              <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-black">{{ project().route.destination }}</h3>
+              <p [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="font-mono text-xs uppercase tracking-widest mb-1">DESTINATION</p>
+              <h3 [class]="theme() === 'dark' ? 'text-white font-bold' : 'text-black font-semibold'" class="text-2xl md:text-3xl tracking-tight">{{ project().route.destination }}</h3>
             </div>
           </div>
 
-          <!-- Description / Tagline (18px typography as specified in DESIGN.md) -->
-          <p class="text-[17px] md:text-[18px] text-[#716e85] leading-relaxed mb-8 max-w-3xl">
+          <!-- Description / Tagline (High readability in dark mode!) -->
+          <p [class]="theme() === 'dark' ? 'text-slate-200 font-normal' : 'text-[#716e85] font-normal'" class="text-[17px] md:text-[18px] leading-relaxed mb-8 max-w-3xl">
             {{ project().tagline }}
           </p>
 
           <!-- Specifications Telemetry Grid -->
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 border-t border-black/10 font-mono text-xs mb-8">
+          <div [class]="theme() === 'dark' ? 'border-t border-white/15' : 'border-t border-black/10'" class="grid grid-cols-2 md:grid-cols-3 gap-6 pt-6 font-mono text-xs mb-8">
             <div>
-              <span class="text-[#716e85] uppercase tracking-widest block mb-1">GATE / INFRA</span>
-              <span class="text-black font-semibold text-sm">{{ project().gate }}</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="uppercase tracking-widest block mb-1">GATE / INFRA</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-100 font-semibold' : 'text-black font-semibold'" class="text-sm">{{ project().gate }}</span>
             </div>
             <div>
-              <span class="text-[#716e85] uppercase tracking-widest block mb-1">SEAT / ROLE</span>
-              <span class="text-black font-semibold text-sm">{{ project().seat }}</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="uppercase tracking-widest block mb-1">SEAT / ROLE</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-100 font-semibold' : 'text-black font-semibold'" class="text-sm">{{ project().seat }}</span>
             </div>
             <div class="col-span-2 md:col-span-1">
-              <span class="text-[#716e85] uppercase tracking-widest block mb-1">SUBSYSTEM STATUS</span>
-              <span class="text-[#001489] font-bold text-sm">{{ project().status }} // ACTIVE</span>
+              <span [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="uppercase tracking-widest block mb-1">SUBSYSTEM STATUS</span>
+              <span [class]="theme() === 'dark' ? 'text-emerald-400 font-bold' : 'text-[#001489] font-bold'" class="text-sm">{{ project().status }} // ACTIVE</span>
             </div>
           </div>
 
-          <!-- Tech Stack Tags: 0px Border-Radius -->
+          <!-- Tech Stack Tags: 0px Border-Radius with light text in dark mode -->
           <div class="flex flex-wrap gap-2 mb-8">
             @for (tech of project().techStack; track tech) {
-              <span class="border border-black px-2.5 py-1 text-black font-mono text-xs uppercase tracking-wider rounded-none">
+              <span [class]="theme() === 'dark' ? 'border border-white/20 text-slate-200 bg-white/5' : 'border border-black text-black bg-transparent'" class="px-2.5 py-1 font-mono text-xs uppercase tracking-wider rounded-none">
                 {{ tech }}
               </span>
             }
@@ -88,13 +92,13 @@
         </div>
 
         <!-- Ghost-Outlined Actions -->
-        <div class="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-black">
+        <div [class]="theme() === 'dark' ? 'border-t border-white/20' : 'border-t border-black'" class="flex flex-wrap items-center justify-between gap-4 pt-6">
           <div class="flex items-center gap-3">
             @if (project().caseStudy.liveDemoUrl) {
               <button
                 type="button"
                 (click)="triggerDemo($event)"
-                class="ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer">
+                [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs font-mono font-semibold tracking-wider cursor-pointer' : 'ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer'">
                 <span>LAUNCH LIVE DEMO &rarr;</span>
               </button>
             }
@@ -103,7 +107,7 @@
           <button
             type="button"
             (click)="toggleFlip()"
-            class="ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer">
+            [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs font-mono font-semibold tracking-wider cursor-pointer' : 'ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer'">
             <span>SPECIFICATION DEEP DIVE [FLIP] &darr;</span>
           </button>
         </div>
@@ -115,21 +119,23 @@
     <!-- ============================================================= -->
     <div 
       #backRef 
-      class="card-face card-back relative flex flex-col bg-white text-black border border-black rounded-none shadow-none p-6 md:p-8 overflow-hidden">
+      [class]="theme() === 'dark'
+        ? 'card-face card-back relative flex flex-col bg-[#0b0f19]/98 text-white border border-white/20 rounded-none shadow-2xl p-6 md:p-8 overflow-hidden backdrop-blur-md'
+        : 'card-face card-back relative flex flex-col bg-white text-black border border-black rounded-none shadow-none p-6 md:p-8 overflow-hidden'">
       
       <!-- Back Face Header -->
-      <div class="flex items-center justify-between gap-4 pb-4 border-b border-black mb-6">
+      <div [class]="theme() === 'dark' ? 'border-b border-white/20' : 'border-b border-black'" class="flex items-center justify-between gap-4 pb-4 mb-6">
         <div>
-          <span class="font-mono text-xs font-bold text-[#001489] uppercase tracking-widest block mb-1">
+          <span [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="font-mono text-xs font-bold uppercase tracking-widest block mb-1">
             ARCHITECTURAL DOSSIER // {{ project().flightNumber }}
           </span>
-          <h3 class="text-2xl md:text-3xl font-semibold tracking-tight text-black">{{ project().callsign }}</h3>
+          <h3 [class]="theme() === 'dark' ? 'text-white' : 'text-black'" class="text-2xl md:text-3xl font-semibold tracking-tight">{{ project().callsign }}</h3>
         </div>
 
         <button
           type="button"
           (click)="toggleFlip()"
-          class="ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer py-2 px-3">
+          [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs font-mono font-semibold tracking-wider cursor-pointer py-2 px-3' : 'ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer py-2 px-3'">
           <span>&larr; RETURN TO SPEC</span>
         </button>
       </div>
@@ -137,23 +143,23 @@
       <!-- Problem vs Architecture 2-Column Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- Challenge -->
-        <div class="border border-black p-6 bg-white">
-          <h4 class="font-mono text-xs font-bold text-black tracking-widest uppercase mb-3 flex items-center gap-2">
-            <span class="w-2 h-2 bg-black"></span>
+        <div [class]="theme() === 'dark' ? 'border border-white/20 bg-white/5' : 'border border-black bg-white'" class="p-6">
+          <h4 [class]="theme() === 'dark' ? 'text-rose-400' : 'text-black'" class="font-mono text-xs font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
+            <span [class]="theme() === 'dark' ? 'bg-rose-400' : 'bg-black'" class="w-2 h-2"></span>
             01 // SYSTEM CHALLENGE & CONSTRAINT
           </h4>
-          <p class="text-[15px] md:text-[16px] text-[#716e85] leading-relaxed">
+          <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-[#716e85]'" class="text-[15px] md:text-[16px] leading-relaxed">
             {{ project().caseStudy.problem }}
           </p>
         </div>
 
         <!-- Architecture -->
-        <div class="border border-black p-6 bg-white">
-          <h4 class="font-mono text-xs font-bold text-[#001489] tracking-widest uppercase mb-3 flex items-center gap-2">
-            <span class="w-2 h-2 bg-[#001489]"></span>
+        <div [class]="theme() === 'dark' ? 'border border-white/20 bg-white/5' : 'border border-black bg-white'" class="p-6">
+          <h4 [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="font-mono text-xs font-bold tracking-widest uppercase mb-3 flex items-center gap-2">
+            <span [class]="theme() === 'dark' ? 'bg-sky-400' : 'bg-[#001489]'" class="w-2 h-2"></span>
             02 // ARCHITECTURAL IMPLEMENTATION
           </h4>
-          <p class="text-[15px] md:text-[16px] text-[#716e85] leading-relaxed">
+          <p [class]="theme() === 'dark' ? 'text-slate-200' : 'text-[#716e85]'" class="text-[15px] md:text-[16px] leading-relaxed">
             {{ project().caseStudy.solution }}
           </p>
         </div>
@@ -161,14 +167,14 @@
 
       <!-- Telemetry Metrics Grid: Strict 0px Border-Radius -->
       <div class="mb-8">
-        <h4 class="font-mono text-xs text-[#716e85] tracking-widest uppercase mb-3">03 // MEASURED FLIGHT TELEMETRY</h4>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-px bg-black border border-black">
+        <h4 [class]="theme() === 'dark' ? 'text-slate-400' : 'text-[#716e85]'" class="font-mono text-xs tracking-widest uppercase mb-3">03 // MEASURED FLIGHT TELEMETRY</h4>
+        <div [class]="theme() === 'dark' ? 'bg-white/20 border border-white/20' : 'bg-black border border-black'" class="grid grid-cols-2 md:grid-cols-3 gap-px">
           @for (metric of project().caseStudy.metrics; track metric.label) {
-            <div class="bg-white p-5 text-left">
-              <p class="text-2xl md:text-3xl font-bold text-[#001489] tracking-tight mb-1">{{ metric.value }}</p>
-              <p class="font-mono text-[11px] text-[#716e85] uppercase tracking-wider">{{ metric.label }}</p>
+            <div [class]="theme() === 'dark' ? 'bg-[#090d16] p-5 text-left' : 'bg-white p-5 text-left'">
+              <p [class]="theme() === 'dark' ? 'text-sky-400' : 'text-[#001489]'" class="text-2xl md:text-3xl font-bold tracking-tight mb-1">{{ metric.value }}</p>
+              <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-[#716e85]'" class="font-mono text-[11px] uppercase tracking-wider">{{ metric.label }}</p>
               @if (metric.change) {
-                <span class="inline-block mt-2 font-mono text-[11px] text-black font-semibold border border-black px-1.5 py-0.5">
+                <span [class]="theme() === 'dark' ? 'border border-emerald-400/40 text-emerald-400 bg-emerald-500/10' : 'border border-black text-black bg-transparent'" class="inline-block mt-2 font-mono text-[11px] font-semibold px-1.5 py-0.5">
                   {{ metric.change }}
                 </span>
               }
@@ -178,8 +184,8 @@
       </div>
 
       <!-- Bottom Specs & Actions -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-black mt-auto">
-        <p class="font-mono text-xs text-[#716e85] max-w-lg">
+      <div [class]="theme() === 'dark' ? 'border-t border-white/20' : 'border-t border-black'" class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 mt-auto">
+        <p [class]="theme() === 'dark' ? 'text-slate-300' : 'text-[#716e85]'" class="font-mono text-xs max-w-lg">
           {{ project().caseStudy.architectureNotes }}
         </p>
 
@@ -188,7 +194,7 @@
             <button
               type="button"
               (click)="triggerDemo($event)"
-              class="ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer">
+              [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs font-mono font-semibold tracking-wider cursor-pointer' : 'ghost-action text-xs font-mono font-semibold tracking-wider cursor-pointer'">
               <span>LAUNCH LIVE DEMO &rarr;</span>
             </button>
           }
@@ -196,7 +202,7 @@
             <a
               [href]="project().caseStudy.githubUrl"
               target="_blank"
-              class="ghost-action text-xs font-mono font-semibold tracking-wider">
+              [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs font-mono font-semibold tracking-wider' : 'ghost-action text-xs font-mono font-semibold tracking-wider'">
               <span>SOURCE CODE [GITHUB] ↗</span>
             </a>
           }

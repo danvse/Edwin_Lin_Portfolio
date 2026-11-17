@@ -1,5 +1,7 @@
 @use "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Heart Aerospace Color Tokens */
   --color-stratosphere: #716e85;
@@ -25,6 +27,14 @@
   --color-cloud: #ffffff;
 }
 
+.dark {
+  /* Lighter, high-contrast palette for crystal-clear readability in Dark Mode */
+  --color-stratosphere: #cbd5e1; /* Light slate - 11.5:1 contrast against black */
+  --color-jetstream-blue: #38bdf8; /* Luminous sky blue - highly vibrant */
+  --color-onyx: #ffffff; /* Inverted to pure white */
+  --color-cloud: #090d16;
+}
+
 /* Root Scroll Configuration */
 html {
   overflow-x: hidden;
@@ -32,6 +42,12 @@ html {
   font-family: var(--font-sans);
   background-color: #ffffff;
   color: #000000;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html.dark, body.dark {
+  background-color: #000000;
+  color: #ffffff;
 }
 
 body {
@@ -41,6 +57,7 @@ body {
   overflow-y: visible;
   min-height: 100vh;
   background-color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Heart Aerospace Ghost Action Class */
@@ -62,6 +79,17 @@ body {
 .ghost-action:hover {
   background: #001489;
   color: #ffffff;
+}
+
+.dark .ghost-action {
+  border: 1.5px solid #38bdf8;
+  background: transparent;
+  color: #ffffff;
+}
+
+.dark .ghost-action:hover {
+  background: #38bdf8;
+  color: #000000;
 }
 
 .ghost-action-cloud {

@@ -90,6 +90,16 @@ export class App {
         }
       }
     });
+
+    // Synchronize reactive theme with HTML document root for seamless Dark Mode
+    effect(() => {
+      if (typeof document !== 'undefined') {
+        const isDark = this.theme() === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        document.body.classList.toggle('dark', isDark);
+        document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+      }
+    });
   }
 
   // Synchronize component reactive signals with the browser URL hash
