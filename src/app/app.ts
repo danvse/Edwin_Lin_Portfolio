@@ -4,11 +4,12 @@ import { ProjectCard } from './components/project-card/project-card';
 import { TicketDashboard } from './components/ticket-dashboard/ticket-dashboard';
 import { DiscordDemo } from './components/discord-demo/discord-demo';
 import { FlightLoader } from './flight-loader/flight-loader';
+import { UsMap } from './components/us-map/us-map';
 import { ProjectFlight } from './models/project.model';
 
 @Component({
   selector: 'app-root',
-  imports: [FlightBackground, ProjectCard, TicketDashboard, DiscordDemo, FlightLoader],
+  imports: [FlightBackground, ProjectCard, TicketDashboard, DiscordDemo, FlightLoader, UsMap],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -16,8 +17,8 @@ export class App {
   // Theme signal: Light or Dark mode for entire application (defaults to 'light')
   protected readonly theme = signal<'dark' | 'light'>('light');
 
-  // Controls which interactive demo modal is active ('delta' | 'discord' | null)
-  protected readonly activeDemo = signal<'delta' | 'discord' | null>(null);
+  // Controls which interactive demo modal is active ('delta' | 'discord' | 'us-map' | null)
+  protected readonly activeDemo = signal<'delta' | 'discord' | 'us-map' | null>(null);
 
   // Controls whether the About Me / Delta Co-op Dossier modal is open
   protected readonly showAbout = signal(false);
@@ -113,6 +114,9 @@ export class App {
     } else if (hash === '#discord-demo' || hash === '#discord') {
       this.activeDemo.set('discord');
       this.showAbout.set(false);
+    } else if (hash === '#map' || hash === '#us-map' || hash === '#operations-map' || hash === '#airspace') {
+      this.activeDemo.set('us-map');
+      this.showAbout.set(false);
     } else if (hash === '#about' || hash === '#dossier') {
       this.showAbout.set(true);
       this.activeDemo.set(null);
@@ -120,6 +124,13 @@ export class App {
       this.activeDemo.set(null);
       this.showAbout.set(false);
     }
+  }
+
+  protected openMap() {
+    if (typeof window !== 'undefined') {
+      window.location.hash = 'us-map';
+    }
+    this.activeDemo.set('us-map');
   }
 
   protected openAbout() {

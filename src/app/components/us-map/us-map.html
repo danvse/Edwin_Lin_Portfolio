@@ -1,0 +1,488 @@
+<div 
+  [class]="theme() === 'dark' 
+    ? 'us-map-container fixed inset-0 z-50 flex flex-col bg-[#070a12] text-white select-none overflow-hidden font-sans' 
+    : 'us-map-container fixed inset-0 z-50 flex flex-col bg-[#f8fafc] text-black select-none overflow-hidden font-sans'">
+
+  <!-- ============================================================= -->
+  <!-- 1. TOP AEROSPACE COMMAND & TELEMETRY BAR                      -->
+  <!-- ============================================================= -->
+  <header [class]="theme() === 'dark' ? 'border-b border-white/15 bg-black/80 backdrop-blur-md px-6 py-4 flex flex-wrap items-center justify-between gap-4 z-20' : 'border-b border-black/15 bg-white/90 backdrop-blur-md px-6 py-4 flex flex-wrap items-center justify-between gap-4 z-20'">
+    
+    <!-- Left: Breadcrumb / Station Title -->
+    <div class="flex items-center gap-4">
+      <button 
+        type="button" 
+        (click)="close.emit()"
+        [class]="theme() === 'dark' ? 'ghost-action-cloud text-xs py-1.5 px-3 cursor-pointer' : 'ghost-action text-xs py-1.5 px-3 cursor-pointer'">
+        <span>&larr; RETURN TO MANIFEST</span>
+      </button>
+
+      <div class="h-6 w-px bg-slate-400/30 hidden sm:block"></div>
+
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 bg-emerald-400 animate-pulse"></span>
+          <h1 class="font-mono text-xs uppercase tracking-[0.2em] font-bold">
+            US AIRSPACE OPERATIONS RADAR // INTERACTIVE TELEMETRY GRID
+          </h1>
+        </div>
+        <p class="font-mono text-[10px] text-slate-400 tracking-wider">
+          LIVE DELTA AIR LINES & FAA CONTINENTAL CORRIDOR SIMULATION &bull; 13 STRATEGIC HUBS
+        </p>
+      </div>
+    </div>
+
+    <!-- Center/Right: Live System Telemetry Badges -->
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <div class="hidden md:flex items-center gap-4 border-x border-slate-400/20 px-4">
+        <div>
+          <span class="text-slate-400 block text-[9px] uppercase tracking-wider">NETWORK HEALTH</span>
+          <span class="text-emerald-400 font-bold">99.98% OPERATIONAL</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[9px] uppercase tracking-wider">ACTIVE IN-FLIGHT</span>
+          <span [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-bold'">284 AIRCRAFT</span>
+        </div>
+        <div>
+          <span class="text-slate-400 block text-[9px] uppercase tracking-wider">ML INTENT CLASSIFIER</span>
+          <span class="text-emerald-400 font-bold">90.7% F1 // 1.2 MS</span>
+        </div>
+      </div>
+
+      <!-- Simulation Speed Controls -->
+      <div class="flex items-center gap-1">
+        <span class="text-slate-400 text-[9px] uppercase tracking-wider mr-1 hidden lg:inline">SPEED:</span>
+        <button 
+          type="button" 
+          (click)="setSimSpeed(0)" 
+          [class]="simSpeed() === 0 ? 'bg-[#001489] text-white border-transparent' : (theme() === 'dark' ? 'border-white/20 text-slate-300' : 'border-black/20 text-black')"
+          class="border px-2 py-1 text-[10px] font-mono cursor-pointer transition-colors">
+          PAUSE
+        </button>
+        <button 
+          type="button" 
+          (click)="setSimSpeed(1)" 
+          [class]="simSpeed() === 1 ? 'bg-[#001489] text-white border-transparent' : (theme() === 'dark' ? 'border-white/20 text-slate-300' : 'border-black/20 text-black')"
+          class="border px-2 py-1 text-[10px] font-mono cursor-pointer transition-colors">
+          1X
+        </button>
+        <button 
+          type="button" 
+          (click)="setSimSpeed(2)" 
+          [class]="simSpeed() === 2 ? 'bg-[#001489] text-white border-transparent' : (theme() === 'dark' ? 'border-white/20 text-slate-300' : 'border-black/20 text-black')"
+          class="border px-2 py-1 text-[10px] font-mono cursor-pointer transition-colors">
+          2X
+        </button>
+        <button 
+          type="button" 
+          (click)="setSimSpeed(5)" 
+          [class]="simSpeed() === 5 ? 'bg-[#001489] text-white border-transparent' : (theme() === 'dark' ? 'border-white/20 text-slate-300' : 'border-black/20 text-black')"
+          class="border px-2 py-1 text-[10px] font-mono cursor-pointer transition-colors">
+          5X
+        </button>
+      </div>
+
+    </div>
+
+  </header>
+
+  <!-- ============================================================= -->
+  <!-- 2. MAIN INTERACTIVE MAP CANVAS                                -->
+  <!-- ============================================================= -->
+  <div class="relative flex-1 w-full h-full overflow-hidden flex" (mousemove)="handleMouseMove($event)" (mouseleave)="handleMouseLeave()">
+    
+    <!-- SVG Vector Map Canvas -->
+    <div class="relative flex-1 h-full w-full flex items-center justify-center p-4">
+      
+      <svg 
+        #mapSvg
+        class="w-full h-full max-h-[85vh] transition-transform duration-500" 
+        viewBox="0 0 1000 640" 
+        preserveAspectRatio="xMidYMid meet">
+        
+        <defs>
+          <!-- Flight Corridor Glow Gradients -->
+          <linearGradient id="flightTrailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.85" />
+            <stop offset="50%" stop-color="#0284c7" stop-opacity="0.6" />
+            <stop offset="100%" stop-color="#001489" stop-opacity="0.2" />
+          </linearGradient>
+
+          <linearGradient id="incidentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.75" />
+            <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.0" />
+          </linearGradient>
+
+          <!-- Radar Sweep Gradient -->
+          <radialGradient id="radarSweepGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+            <stop offset="60%" stop-color="#0284c7" stop-opacity="0.08" />
+            <stop offset="100%" stop-color="#001489" stop-opacity="0.0" />
+          </radialGradient>
+        </defs>
+
+        <!-- Coordinate Grid Parallels (Lat / Lon lines) -->
+        <g class="coordinate-grid opacity-20 pointer-events-none" [attr.stroke]="theme() === 'dark' ? '#94a3b8' : '#64748b'" stroke-width="0.75" stroke-dasharray="3,6">
+          <line x1="50" y1="120" x2="950" y2="120" />
+          <line x1="50" y1="220" x2="950" y2="220" />
+          <line x1="50" y1="320" x2="950" y2="320" />
+          <line x1="50" y1="420" x2="950" y2="420" />
+          <line x1="50" y1="520" x2="950" y2="520" />
+
+          <line x1="160" y1="50" x2="160" y2="600" />
+          <line x1="320" y1="50" x2="320" y2="600" />
+          <line x1="480" y1="50" x2="480" y2="600" />
+          <line x1="640" y1="50" x2="640" y2="600" />
+          <line x1="800" y1="50" x2="800" y2="600" />
+        </g>
+
+        <!-- Airspace Sector Range Rings centered on Delta Global HQ (ATL) -->
+        @if (activeLayer() === 'all' || activeLayer() === 'radar') {
+          <g class="radar-sector-rings pointer-events-none" stroke="#38bdf8" stroke-width="0.8" fill="none" opacity="0.3">
+            <!-- 250nm Ring -->
+            <circle cx="720" cy="410" r="90" stroke-dasharray="2,4" />
+            <!-- 500nm Ring -->
+            <circle cx="720" cy="410" r="180" stroke-dasharray="4,6" />
+            <!-- 1000nm Ring -->
+            <circle cx="720" cy="410" r="320" stroke-dasharray="6,8" />
+            <!-- Continental Radar Sweep Cone -->
+            <line x1="720" y1="410" x2="950" y2="250" class="radar-sweep-blade" stroke-width="1.5" stroke="#38bdf8" opacity="0.6" />
+          </g>
+        }
+
+        <!-- ============================================================= -->
+        <!-- CONTINENTAL US VECTOR LANDMASS & BOUNDARIES                   -->
+        <!-- ============================================================= -->
+        <g id="us-landmass" [class]="theme() === 'dark' ? 'fill-slate-900/80 stroke-slate-700/80' : 'fill-slate-200/90 stroke-slate-300'" stroke-width="1.2">
+          
+          <!-- Continental United States Outer Coastline & National Border -->
+          <path 
+            class="transition-colors duration-300"
+            d="M 125,95 
+               L 165,95 L 205,100 L 290,105 L 360,110 L 460,115 L 530,120 L 590,135 L 610,120 L 640,115 L 670,140 L 705,145 L 740,130 L 770,150 L 810,135 L 850,140 L 890,110 L 920,130 L 925,160 L 905,190 L 895,225 L 870,240 L 840,270 L 825,310 L 815,355 L 795,380 L 805,430 L 825,480 L 830,545 L 815,575 L 795,550 L 760,495 L 735,475 L 690,470 L 655,475 L 630,480 L 590,485 L 565,510 L 545,545 L 515,580 L 485,555 L 450,520 L 410,485 L 350,470 L 305,465 L 245,460 L 195,455 L 155,445 L 125,410 L 95,370 L 75,320 L 85,250 L 95,190 L 105,140 Z" />
+
+          <!-- Internal Regional Airspace Boundary Dividers -->
+          <g stroke-width="0.75" [attr.stroke]="theme() === 'dark' ? '#334155' : '#cbd5e1'" stroke-dasharray="2,3" fill="none">
+            <!-- Pacific / Mountain Airspace Boundary -->
+            <path d="M 210,100 L 210,240 L 180,330 L 180,450" />
+            <!-- Mountain / Central Airspace Boundary -->
+            <path d="M 440,115 L 440,280 L 460,370 L 460,500" />
+            <!-- Central / Eastern Airspace Boundary -->
+            <path d="M 680,140 L 680,270 L 690,380 L 690,470" />
+            <!-- Great Lakes Coastline Indentations -->
+            <path d="M 590,135 Q 630,170 660,150 Q 700,185 740,165" />
+          </g>
+
+        </g>
+
+        <!-- ============================================================= -->
+        <!-- LAYER: FLIGHT CORRIDORS (BEZIER ARCS)                         -->
+        <!-- ============================================================= -->
+        @if (activeLayer() === 'all' || activeLayer() === 'flights' || activeLayer() === 'ml') {
+          <g class="flight-corridors-group">
+            @for (corridor of visibleCorridors(); track corridor.id) {
+              <g class="corridor-item">
+                <!-- Base Ghost Trajectory Line -->
+                <path 
+                  [attr.d]="corridor.pathD" 
+                  fill="none" 
+                  [attr.stroke]="(selectedHubId() === corridor.from || selectedHubId() === corridor.to || hoveredHubId() === corridor.from || hoveredHubId() === corridor.to) ? '#38bdf8' : (theme() === 'dark' ? '#38bdf8' : '#001489')" 
+                  [attr.stroke-opacity]="(selectedHubId() === corridor.from || selectedHubId() === corridor.to || hoveredHubId() === corridor.from || hoveredHubId() === corridor.to) ? '0.85' : '0.22'"
+                  [attr.stroke-width]="(selectedHubId() === corridor.from || selectedHubId() === corridor.to) ? '2' : '1.2'"
+                  stroke-dasharray="4,6" 
+                  class="transition-all duration-300" />
+
+                <!-- Active Pulsing Great-Circle Arc on hover/selection -->
+                @if (selectedHubId() === corridor.from || selectedHubId() === corridor.to || hoveredHubId() === corridor.from || hoveredHubId() === corridor.to) {
+                  <path 
+                    [attr.d]="corridor.pathD" 
+                    fill="none" 
+                    stroke="url(#flightTrailGrad)" 
+                    stroke-width="2.5" 
+                    class="active-corridor-flow" />
+                }
+              </g>
+            }
+          </g>
+        }
+
+        <!-- ============================================================= -->
+        <!-- LAYER: ACTIVE AIRCRAFT BLIPS & CALLSIGNS                      -->
+        <!-- ============================================================= -->
+        @if (activeLayer() === 'all' || activeLayer() === 'flights') {
+          <g class="aircraft-blips-group">
+            @for (blip of aircraftBlips(); track blip.id) {
+              @let pt = getPointOnBezier(blip.pathD, blip.progress);
+              <g [attr.transform]="'translate(' + pt.x + ',' + pt.y + ')'" class="aircraft-marker cursor-pointer pointer-events-none">
+                <!-- Outer Radar Transponder Ring -->
+                <circle r="6" fill="#38bdf8" fill-opacity="0.25" class="animate-ping" />
+                <!-- Aircraft Silhouette Center Dot -->
+                <circle r="3" fill="#38bdf8" stroke="#ffffff" stroke-width="1" />
+                
+                <!-- Callsign & Altitude Label Tag -->
+                <g transform="translate(8, -8)" class="select-none">
+                  <rect x="0" y="0" width="62" height="15" [attr.fill]="theme() === 'dark' ? '#000000' : '#ffffff'" fill-opacity="0.85" [attr.stroke]="theme() === 'dark' ? '#38bdf8' : '#001489'" stroke-width="0.75" />
+                  <text x="3" y="11" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="bold" [attr.fill]="theme() === 'dark' ? '#38bdf8' : '#001489'">
+                    {{ blip.flightNumber }}
+                  </text>
+                </g>
+              </g>
+            }
+          </g>
+        }
+
+        <!-- ============================================================= -->
+        <!-- LAYER: INCIDENT DENSITY HEAT ZONES (SERVICENOW CLASSIFIER)    -->
+        <!-- ============================================================= -->
+        @if (activeLayer() === 'all' || activeLayer() === 'incidents') {
+          <g class="incident-heat-layer pointer-events-none">
+            @for (hub of hubs; track hub.id) {
+              <!-- Heat Radius mapped to ticket volume -->
+              <circle 
+                [attr.cx]="hub.x" 
+                [attr.cy]="hub.y" 
+                [attr.r]="isIncidentSurge() ? hub.ticketVolumeMonth / 160 : hub.ticketVolumeMonth / 280" 
+                fill="url(#incidentGrad)" 
+                class="transition-all duration-700 animate-pulse" />
+            }
+          </g>
+        }
+
+        <!-- ============================================================= -->
+        <!-- LAYER: AIRPORT HUBS & INTERACTIVE HOTSPOTS                    -->
+        <!-- ============================================================= -->
+        <g class="hubs-layer">
+          @for (hub of hubs; track hub.id) {
+            @let isSelected = selectedHubId() === hub.id;
+            @let isHovered = hoveredHubId() === hub.id;
+
+            <g 
+              class="hub-node group cursor-pointer"
+              [attr.transform]="'translate(' + hub.x + ',' + hub.y + ')'"
+              (mouseenter)="hoverHub(hub.id)"
+              (mouseleave)="hoverHub(null)"
+              (click)="selectHub(hub.id)">
+              
+              <!-- Selection Reticle / Target Bracket -->
+              @if (isSelected || isHovered) {
+                <g class="hub-target-bracket" stroke="#38bdf8" stroke-width="1.2" fill="none">
+                  <path d="M -12,-6 L -12,-12 L -6,-12" />
+                  <path d="M 6,-12 L 12,-12 L 12,-6" />
+                  <path d="M 12,6 L 12,12 L 6,12" />
+                  <path d="M -6,12 L -12,12 L -12,6" />
+                </g>
+              }
+
+              <!-- Pulsing Hub Beacon -->
+              <circle 
+                r="7" 
+                [attr.fill]="hub.isDeltaHq ? '#10b981' : '#38bdf8'" 
+                fill-opacity="0.3" 
+                class="transition-all duration-300 group-hover:scale-150" />
+
+              <circle 
+                r="3.5" 
+                [attr.fill]="hub.isDeltaHq ? '#10b981' : (theme() === 'dark' ? '#38bdf8' : '#001489')" 
+                stroke="#ffffff" 
+                stroke-width="1.2" 
+                class="transition-transform duration-200 group-hover:scale-125" />
+
+              <!-- Hub IATA Code & Role Badge -->
+              <text 
+                x="10" 
+                y="4" 
+                font-family="'JetBrains Mono', monospace" 
+                font-size="10" 
+                font-weight="bold" 
+                [attr.fill]="(isSelected || isHovered) ? '#38bdf8' : (theme() === 'dark' ? '#ffffff' : '#000000')"
+                class="transition-colors duration-200">
+                {{ hub.id }}
+                @if (hub.isDeltaHq) {
+                  <tspan font-size="8" fill="#10b981"> [DELTA_HQ]</tspan>
+                }
+              </text>
+
+            </g>
+          }
+        </g>
+
+      </svg>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- 3. INVERSA-STYLE FLOATING DATA LAYERS SWITCHER                -->
+    <!-- ============================================================= -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 p-1.5 bg-black/85 border border-white/20 backdrop-blur-xl shadow-2xl max-w-full overflow-x-auto">
+      
+      <span class="text-[10px] font-mono text-slate-400 px-3 uppercase tracking-wider hidden sm:inline">
+        DATA LAYERS:
+      </span>
+
+      <button 
+        type="button" 
+        (click)="setLayer('all')"
+        [class]="activeLayer() === 'all' ? 'bg-[#001489] text-white font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'"
+        class="px-3 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer uppercase">
+        ALL SYSTEMS
+      </button>
+
+      <button 
+        type="button" 
+        (click)="setLayer('flights')"
+        [class]="activeLayer() === 'flights' ? 'bg-[#001489] text-white font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'"
+        class="px-3 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer uppercase flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 bg-sky-400"></span>
+        FLIGHT CORRIDORS
+      </button>
+
+      <button 
+        type="button" 
+        (click)="setLayer('incidents')"
+        [class]="activeLayer() === 'incidents' ? 'bg-[#001489] text-white font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'"
+        class="px-3 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer uppercase flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 bg-rose-400"></span>
+        INCIDENT TRIAGE
+      </button>
+
+      <button 
+        type="button" 
+        (click)="setLayer('radar')"
+        [class]="activeLayer() === 'radar' ? 'bg-[#001489] text-white font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'"
+        class="px-3 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer uppercase flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 bg-emerald-400"></span>
+        FAA RADAR
+      </button>
+
+      <button 
+        type="button" 
+        (click)="setLayer('ml')"
+        [class]="activeLayer() === 'ml' ? 'bg-[#001489] text-white font-bold' : 'text-slate-300 hover:text-white hover:bg-white/10'"
+        class="px-3 py-1.5 text-xs font-mono tracking-wider transition-colors cursor-pointer uppercase flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 bg-amber-400"></span>
+        ML EDGE NODES
+      </button>
+
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- 4. LIVE GEOGRAPHIC CURSOR TELEMETRY HUD                       -->
+    <!-- ============================================================= -->
+    @if (cursorInfo().visible) {
+      <div 
+        class="pointer-events-none fixed z-40 hidden sm:flex items-center gap-2 px-3 py-1.5 bg-black/90 border border-white/20 text-white font-mono text-[10px] tracking-wider backdrop-blur-md shadow-lg"
+        [style.left.px]="cursorInfo().x + 14"
+        [style.top.px]="cursorInfo().y + 14">
+        <span class="w-1.5 h-1.5 bg-sky-400 animate-ping"></span>
+        <span>RADAR LAT: {{ cursorInfo().lat }} &bull; LON: {{ cursorInfo().lon }}</span>
+      </div>
+    }
+
+    <!-- ============================================================= -->
+    <!-- 5. RIGHT-SIDE INTERACTIVE TELEMETRY INSPECTOR DRAWER          -->
+    <!-- ============================================================= -->
+    <aside [class]="theme() === 'dark' ? 'w-80 md:w-96 border-l border-white/15 bg-black/95 backdrop-blur-xl p-6 pb-28 flex flex-col justify-between overflow-y-auto z-20' : 'w-80 md:w-96 border-l border-black/15 bg-white/95 backdrop-blur-xl p-6 pb-28 flex flex-col justify-between overflow-y-auto z-20'">
+      
+      <div>
+        <!-- Station Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-400/20 mb-6">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 font-mono text-[10px] font-bold tracking-wider" [class]="currentHub().isDeltaHq ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-sky-500/20 text-sky-400 border border-sky-500/40'">
+                {{ currentHub().iata }}
+              </span>
+              <span class="font-mono text-xs text-slate-400">{{ currentHub().state }}</span>
+            </div>
+            <h2 class="text-lg md:text-xl font-bold tracking-tight mt-1">
+              {{ currentHub().name }}
+            </h2>
+          </div>
+        </div>
+
+        <!-- Telemetry Coordinates -->
+        <div class="space-y-4 font-mono text-xs mb-6">
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">COORDINATES</span>
+            <span class="font-bold">{{ currentHub().lat }} / {{ currentHub().lon }}</span>
+          </div>
+
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">SUBSYSTEM ROLE</span>
+            <span [class]="theme() === 'dark' ? 'text-sky-400 font-bold' : 'text-[#001489] font-bold'">{{ currentHub().role }}</span>
+          </div>
+
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">DAILY FLIGHT CAPACITY</span>
+            <span class="font-bold">{{ currentHub().dailyFlights }} FLIGHTS</span>
+          </div>
+
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">SERVICENOW TICKETS/MO</span>
+            <span class="text-emerald-400 font-bold">{{ currentHub().ticketVolumeMonth | number }} INCIDENTS</span>
+          </div>
+
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">ML CLASSIFIER ACCURACY</span>
+            <span class="text-emerald-400 font-bold">{{ currentHub().mlAccuracy }}</span>
+          </div>
+
+          <div class="flex justify-between py-1.5 border-b border-slate-400/10">
+            <span class="text-slate-400 uppercase">AWS LAMBDA INFERENCE</span>
+            <span class="font-bold">{{ currentHub().mlLatency }}</span>
+          </div>
+        </div>
+
+        <!-- Incident Surge Simulation Toggle -->
+        <div class="p-4 border border-rose-500/30 bg-rose-500/10 mb-6">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-[10px] text-rose-400 font-bold uppercase tracking-wider">
+              STORM / SURGE SIMULATION
+            </span>
+            <span class="w-2 h-2 rounded-full" [class]="isIncidentSurge() ? 'bg-rose-400 animate-ping' : 'bg-slate-500'"></span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-3">
+            Injects 40% incident spike across regional corridors to benchmark LinearSVC NLP automated triage.
+          </p>
+          <button 
+            type="button" 
+            (click)="toggleIncidentSurge()"
+            class="w-full py-1.5 px-3 border border-rose-400 text-rose-400 hover:bg-rose-500 hover:text-white font-mono text-xs font-bold tracking-wider transition-colors cursor-pointer uppercase">
+            {{ isIncidentSurge() ? '■ DEACTIVATE SURGE' : '▲ INJECT 40% SURGE' }}
+          </button>
+        </div>
+
+        <!-- Connected Corridor Manifest -->
+        <div>
+          <span class="font-mono text-[10px] text-slate-400 uppercase tracking-wider block mb-2">
+            ACTIVE CONTINENTAL ROUTES ({{ currentHub().connectedRoutes.length }})
+          </span>
+          <div class="flex flex-wrap gap-1.5">
+            @for (dest of currentHub().connectedRoutes; track dest) {
+              <button 
+                type="button" 
+                (click)="selectHub(dest)"
+                [class]="selectedHubId() === dest ? 'bg-[#001489] text-white border-transparent' : (theme() === 'dark' ? 'border-white/20 text-slate-300 hover:border-white' : 'border-black/20 text-black hover:border-black')"
+                class="px-2 py-1 border font-mono text-[10px] cursor-pointer transition-colors">
+                {{ dest }} &rarr;
+              </button>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer CTA to Open Projects or Operations Dashboard -->
+      <div class="pt-6 border-t border-slate-400/20 mt-6 space-y-2">
+        <a 
+          href="#dashboard" 
+          (click)="close.emit()"
+          class="ghost-action w-full justify-center text-xs py-2">
+          <span>OPEN DELTA OPERATIONS DASHBOARD &rarr;</span>
+        </a>
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>
