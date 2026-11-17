@@ -128,7 +128,6 @@ export class App {
           { label: 'MONTHLY INTENT ROUTING', value: '10,000+', change: 'Automated' },
           { label: 'DAILY RETRAINING', value: '100% AUTO', change: 'PostgreSQL' },
         ],
-        githubUrl: 'https://github.com/danvse',
         liveDemoUrl: '#dashboard',
       },
     },
@@ -155,7 +154,6 @@ export class App {
           { label: 'TEST EXECUTION', value: 'PARALLEL SHARDS', change: '200+ Tests' },
           { label: 'DELTA PLATFORM', value: 'RESOURCEHUB', change: 'Hiring & Talent' },
         ],
-        githubUrl: 'https://github.com/danvse',
       },
     },
     {
