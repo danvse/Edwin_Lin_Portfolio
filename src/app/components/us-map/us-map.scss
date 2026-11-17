@@ -20,10 +20,10 @@
   }
 }
 
-// Radar sweep rotation
-.radar-sweep-blade {
-  animation: radarSweepAnim 5s linear infinite;
-  transform-origin: 720px 410px; // Centered on Atlanta (ATL) Delta HQ
+// Radar sweep rotation inside the dynamic hub group
+.hub-nautical-rings .radar-sweep-blade {
+  transform-origin: 0 0;
+  animation: radarSweepAnim 4s linear infinite;
 }
 
 @keyframes radarSweepAnim {
@@ -47,18 +47,43 @@
   }
 }
 
-// Hub target bracket subtle rotation
+// Hub target bracket subtle rotation & pulsing
 .hub-target-bracket {
   animation: bracketPulse 2.5s ease-in-out infinite;
+  transform-origin: center;
 }
 
 @keyframes bracketPulse {
   0%, 100% {
     transform: scale(1);
-    opacity: 0.9;
+    opacity: 0.85;
   }
   50% {
-    transform: scale(1.15);
+    transform: scale(1.12);
     opacity: 1;
+  }
+}
+
+// Aircraft jet hover & selection effects
+.aircraft-jet-group {
+  transition: opacity 0.2s ease;
+  &:hover {
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+  }
+}
+
+// Custom technical scrollbar for telemetry drawer
+aside {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
   }
 }

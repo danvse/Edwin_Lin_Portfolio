@@ -28,6 +28,11 @@ export interface AirportHub {
   mlAccuracy: string;
   mlLatency: string;
   connectedRoutes: string[];
+  metar: string;
+  wind: string;
+  temp: string;
+  altimeter: string;
+  flightRules: 'VFR' | 'MVFR' | 'IFR';
 }
 
 export interface FlightCorridor {
@@ -45,6 +50,7 @@ export interface FlightCorridor {
 export interface AircraftBlip {
   id: string;
   flightNumber: string;
+  callsign: string;
   corridorId: string;
   from: string;
   to: string;
@@ -54,6 +60,9 @@ export interface AircraftBlip {
   altitude: string;
   eta: string;
   status: 'CLIMBING' | 'CRUISING' | 'DESCENDING' | 'TRIAGED';
+  aircraftType: string;
+  speedKts: number;
+  mach: string;
 }
 
 @Component({
@@ -77,6 +86,16 @@ export class UsMap implements OnDestroy {
 
   // Hovered hub for instant HUD inspection
   protected readonly hoveredHubId = signal<string | null>(null);
+
+  // Selected in-flight aircraft for avionics inspection
+  protected readonly selectedFlightId = signal<string | null>(null);
+
+  // Search filter query for hubs
+  protected readonly hubSearchQuery = signal<string>('');
+
+  // Audio synthesizer sonar effect toggle (zero external audio files)
+  protected readonly soundEnabled = signal<boolean>(false);
+  private audioCtx?: AudioContext;
 
   // Live mouse geographic coordinate tracker
   protected readonly cursorInfo = signal<{
@@ -123,6 +142,11 @@ export class UsMap implements OnDestroy {
       mlAccuracy: '90.7% F1',
       mlLatency: '1.2 ms',
       connectedRoutes: ['JFK', 'LAX', 'ORD', 'SEA', 'DFW', 'DEN', 'MIA', 'BOS', 'SFO', 'DTW', 'MSP', 'SLC'],
+      metar: 'KATL 171952Z 27011KT 10SM FEW045 BKN250 22/11 A3002 RMK AO2 SLP164',
+      wind: '270° @ 11 KT',
+      temp: '22°C (72°F)',
+      altimeter: '30.02 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'JFK',
@@ -139,24 +163,34 @@ export class UsMap implements OnDestroy {
       ticketVolumeMonth: 4890,
       mlAccuracy: '91.2% F1',
       mlLatency: '1.4 ms',
-      connectedRoutes: ['ATL', 'LAX', 'SFO', 'ORD', 'SEA', 'MIA', 'BOS'],
+      connectedRoutes: ['ATL', 'LAX', 'SFO', 'SEA', 'BOS', 'MIA', 'ORD'],
+      metar: 'KJFK 171951Z 31014G21KT 10SM SCT050 18/06 A3006 RMK AO2 PK WND 31024',
+      wind: '310° @ 14G21 KT',
+      temp: '18°C (64°F)',
+      altimeter: '30.06 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'BOS',
       iata: 'KBOS',
-      name: 'Logan International Airport',
+      name: 'Boston Logan International Airport',
       city: 'Boston',
       state: 'MA',
       x: 910,
       y: 195,
       lat: '42.3656° N',
       lon: '71.0096° W',
-      role: 'Northeast Tech & Business Corridor Hub',
+      role: 'Northeast Domestic & Transatlantic Node',
       dailyFlights: 310,
       ticketVolumeMonth: 3120,
-      mlAccuracy: '89.8% F1',
-      mlLatency: '1.1 ms',
-      connectedRoutes: ['ATL', 'JFK', 'ORD', 'SEA', 'MIA'],
+      mlAccuracy: '91.6% F1',
+      mlLatency: '1.3 ms',
+      connectedRoutes: ['ATL', 'JFK', 'DTW', 'MSP', 'SEA'],
+      metar: 'KBOS 171954Z 32015KT 10SM BKN060 16/04 A3008 RMK AO2',
+      wind: '320° @ 15 KT',
+      temp: '16°C (61°F)',
+      altimeter: '30.08 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'ORD',
@@ -168,29 +202,39 @@ export class UsMap implements OnDestroy {
       y: 260,
       lat: '41.9742° N',
       lon: '87.9073° W',
-      role: 'Midwest Crossroads & Real-Time Weather Forecaster',
+      role: 'Midwest Air Traffic Hub & Incident Routing Center',
       dailyFlights: 680,
-      ticketVolumeMonth: 6340,
-      mlAccuracy: '92.4% F1',
-      mlLatency: '1.3 ms',
-      connectedRoutes: ['ATL', 'JFK', 'LAX', 'SEA', 'DEN', 'DFW', 'DTW', 'MSP'],
+      ticketVolumeMonth: 7240,
+      mlAccuracy: '90.9% F1',
+      mlLatency: '1.1 ms',
+      connectedRoutes: ['ATL', 'DFW', 'DEN', 'SEA', 'LAX', 'JFK', 'DTW', 'MSP'],
+      metar: 'KORD 171951Z 21016G24KT 10SM BKN080 19/08 A2998 RMK AO2',
+      wind: '210° @ 16G24 KT',
+      temp: '19°C (66°F)',
+      altimeter: '29.98 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'DTW',
       iata: 'KDTW',
-      name: 'Detroit Metropolitan Wayne County',
+      name: 'Detroit Metropolitan Airport',
       city: 'Detroit',
       state: 'MI',
       x: 705,
       y: 245,
       lat: '42.2162° N',
       lon: '83.3554° W',
-      role: 'Primary Delta Northern Hub & Automation Testbed',
-      dailyFlights: 410,
-      ticketVolumeMonth: 3890,
-      mlAccuracy: '90.5% F1',
-      mlLatency: '1.2 ms',
-      connectedRoutes: ['ATL', 'ORD', 'JFK', 'SEA', 'LAX', 'MSP'],
+      role: 'Northern Operations & Asian Departure Hub',
+      dailyFlights: 390,
+      ticketVolumeMonth: 3950,
+      mlAccuracy: '92.3% F1',
+      mlLatency: '1.5 ms',
+      connectedRoutes: ['ATL', 'ORD', 'MSP', 'BOS', 'SEA', 'LAX'],
+      metar: 'KDTW 171953Z 23012KT 10SM SCT100 20/07 A3001 RMK AO2',
+      wind: '230° @ 12 KT',
+      temp: '20°C (68°F)',
+      altimeter: '30.01 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'MSP',
@@ -202,12 +246,17 @@ export class UsMap implements OnDestroy {
       y: 195,
       lat: '44.8848° N',
       lon: '93.2223° W',
-      role: 'Northwest Transit Hub & Batch Analytics Cluster',
-      dailyFlights: 390,
-      ticketVolumeMonth: 3450,
-      mlAccuracy: '89.9% F1',
-      mlLatency: '1.5 ms',
-      connectedRoutes: ['ATL', 'ORD', 'SEA', 'DEN', 'DTW', 'SLC'],
+      role: 'Upper Midwest Hub & Telemetry Dispatch Cluster',
+      dailyFlights: 360,
+      ticketVolumeMonth: 3410,
+      mlAccuracy: '91.5% F1',
+      mlLatency: '1.3 ms',
+      connectedRoutes: ['ATL', 'ORD', 'DTW', 'DEN', 'SEA', 'SLC'],
+      metar: 'KMSP 171953Z 17013G19KT 10SM CLR 17/05 A2994 RMK AO2',
+      wind: '170° @ 13G19 KT',
+      temp: '17°C (63°F)',
+      altimeter: '29.94 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'DFW',
@@ -216,15 +265,20 @@ export class UsMap implements OnDestroy {
       city: 'Dallas',
       state: 'TX',
       x: 520,
-      y: 445,
+      y: 450,
       lat: '32.8998° N',
       lon: '97.0403° W',
-      role: 'South Central Hub & AWS Failover Subsystem',
-      dailyFlights: 540,
-      ticketVolumeMonth: 5120,
-      mlAccuracy: '90.1% F1',
-      mlLatency: '1.3 ms',
-      connectedRoutes: ['ATL', 'ORD', 'LAX', 'DEN', 'MIA', 'SFO'],
+      role: 'South Central Corridors & Backup Operations',
+      dailyFlights: 580,
+      ticketVolumeMonth: 5840,
+      mlAccuracy: '90.4% F1',
+      mlLatency: '1.6 ms',
+      connectedRoutes: ['ATL', 'ORD', 'DEN', 'LAX', 'MIA', 'SEA'],
+      metar: 'KDFW 171953Z 18018G26KT 10SM FEW030 SCT250 26/17 A2989 RMK AO2',
+      wind: '180° @ 18G26 KT',
+      temp: '26°C (79°F)',
+      altimeter: '29.89 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'DEN',
@@ -232,16 +286,21 @@ export class UsMap implements OnDestroy {
       name: 'Denver International Airport',
       city: 'Denver',
       state: 'CO',
-      x: 390,
+      x: 395,
       y: 310,
       lat: '39.8561° N',
       lon: '104.6737° W',
-      role: 'Rocky Mountain Airspace & Altitude Telemetry',
+      role: 'Rocky Mountain Gateway & High-Altitude Routing',
       dailyFlights: 510,
       ticketVolumeMonth: 4620,
       mlAccuracy: '91.0% F1',
       mlLatency: '1.2 ms',
       connectedRoutes: ['ATL', 'ORD', 'LAX', 'SEA', 'DFW', 'SFO', 'SLC'],
+      metar: 'KDEN 171953Z 02008KT 10SM SCT120 15/01 A3012 RMK AO2',
+      wind: '020° @ 08 KT',
+      temp: '15°C (59°F)',
+      altimeter: '30.12 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'SLC',
@@ -259,6 +318,11 @@ export class UsMap implements OnDestroy {
       mlAccuracy: '90.3% F1',
       mlLatency: '1.4 ms',
       connectedRoutes: ['ATL', 'SEA', 'LAX', 'SFO', 'DEN', 'MSP'],
+      metar: 'KSLC 171954Z 33009KT 10SM CLR 16/02 A3015 RMK AO2',
+      wind: '330° @ 09 KT',
+      temp: '16°C (61°F)',
+      altimeter: '30.15 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'SEA',
@@ -276,6 +340,11 @@ export class UsMap implements OnDestroy {
       mlAccuracy: '91.8% F1',
       mlLatency: '1.1 ms',
       connectedRoutes: ['ATL', 'LAX', 'SFO', 'DEN', 'ORD', 'JFK', 'SLC', 'MSP'],
+      metar: 'KSEA 171953Z 19008KT 10SM -RA OVC035 13/09 A2988 RMK AO2',
+      wind: '190° @ 08 KT',
+      temp: '13°C (55°F)',
+      altimeter: '29.88 inHg',
+      flightRules: 'MVFR',
     },
     {
       id: 'SFO',
@@ -293,6 +362,11 @@ export class UsMap implements OnDestroy {
       mlAccuracy: '93.1% F1',
       mlLatency: '0.9 ms',
       connectedRoutes: ['ATL', 'LAX', 'SEA', 'JFK', 'DEN', 'ORD'],
+      metar: 'KSFO 171956Z 29016KT 10SM FEW020 18/11 A2999 RMK AO2',
+      wind: '290° @ 16 KT',
+      temp: '18°C (64°F)',
+      altimeter: '29.99 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'LAX',
@@ -310,6 +384,11 @@ export class UsMap implements OnDestroy {
       mlAccuracy: '91.4% F1',
       mlLatency: '1.2 ms',
       connectedRoutes: ['ATL', 'JFK', 'SFO', 'SEA', 'ORD', 'DFW', 'DEN', 'SLC'],
+      metar: 'KLAX 171953Z 24009KT 10SM CLR 24/14 A2996 RMK AO2',
+      wind: '240° @ 09 KT',
+      temp: '24°C (75°F)',
+      altimeter: '29.96 inHg',
+      flightRules: 'VFR',
     },
     {
       id: 'MIA',
@@ -321,16 +400,21 @@ export class UsMap implements OnDestroy {
       y: 555,
       lat: '25.7959° N',
       lon: '80.2870° W',
-      role: 'Latin America Gateway & Weather Monitoring Hub',
-      dailyFlights: 360,
-      ticketVolumeMonth: 3290,
-      mlAccuracy: '89.6% F1',
-      mlLatency: '1.3 ms',
-      connectedRoutes: ['ATL', 'JFK', 'BOS', 'ORD', 'DFW'],
+      role: 'Latin America & Caribbean Gateway',
+      dailyFlights: 340,
+      ticketVolumeMonth: 3260,
+      mlAccuracy: '90.8% F1',
+      mlLatency: '1.4 ms',
+      connectedRoutes: ['ATL', 'JFK', 'DFW', 'ORD'],
+      metar: 'KMIA 171953Z 11011KT 10SM SCT025 28/22 A3004 RMK AO2',
+      wind: '110° @ 11 KT',
+      temp: '28°C (82°F)',
+      altimeter: '30.04 inHg',
+      flightRules: 'VFR',
     },
   ];
 
-  // Geographically calibrated great-circle curved flight corridors
+  // Great-Circle Flight Corridors
   protected readonly corridors: FlightCorridor[] = [
     {
       id: 'ATL-JFK',
@@ -339,9 +423,9 @@ export class UsMap implements OnDestroy {
       pathD: 'M 720,410 Q 805,305 875,225',
       flightNumber: 'DAL-907',
       callsign: 'DELTA NINE-ZERO-SEVEN',
-      aircraftType: 'A350-900',
+      aircraftType: 'A321neo',
       altitude: 'FL360',
-      speedKts: 480,
+      speedKts: 470,
     },
     {
       id: 'ATL-LAX',
@@ -355,17 +439,6 @@ export class UsMap implements OnDestroy {
       speedKts: 495,
     },
     {
-      id: 'ATL-SEA',
-      from: 'ATL',
-      to: 'SEA',
-      pathD: 'M 720,410 Q 420,230 145,110',
-      flightNumber: 'DAL-382',
-      callsign: 'DELTA THREE-EIGHT-TWO',
-      aircraftType: 'A321neo',
-      altitude: 'FL340',
-      speedKts: 460,
-    },
-    {
       id: 'ATL-ORD',
       from: 'ATL',
       to: 'ORD',
@@ -377,26 +450,37 @@ export class UsMap implements OnDestroy {
       speedKts: 440,
     },
     {
+      id: 'ATL-SEA',
+      from: 'ATL',
+      to: 'SEA',
+      pathD: 'M 720,410 Q 420,230 145,110',
+      flightNumber: 'DAL-382',
+      callsign: 'DELTA THREE-EIGHT-TWO',
+      aircraftType: 'A350-900',
+      altitude: 'FL400',
+      speedKts: 515,
+    },
+    {
       id: 'ATL-DFW',
       from: 'ATL',
       to: 'DFW',
-      pathD: 'M 720,410 Q 615,435 520,445',
-      flightNumber: 'DAL-781',
-      callsign: 'DELTA SEVEN-EIGHT-ONE',
+      pathD: 'M 720,410 Q 620,440 520,450',
+      flightNumber: 'DAL-997',
+      callsign: 'DELTA NINE-NINE-SEVEN',
       aircraftType: 'A220-300',
-      altitude: 'FL300',
-      speedKts: 420,
+      altitude: 'FL340',
+      speedKts: 460,
     },
     {
       id: 'ATL-DEN',
       from: 'ATL',
       to: 'DEN',
-      pathD: 'M 720,410 Q 550,350 390,310',
-      flightNumber: 'DAL-429',
-      callsign: 'DELTA FOUR-TWO-NINE',
+      pathD: 'M 720,410 Q 550,345 395,310',
+      flightNumber: 'DAL-844',
+      callsign: 'DELTA EIGHT-FOUR-FOUR',
       aircraftType: 'B757-200',
-      altitude: 'FL350',
-      speedKts: 470,
+      altitude: 'FL370',
+      speedKts: 480,
     },
     {
       id: 'ATL-MIA',
@@ -479,23 +563,23 @@ export class UsMap implements OnDestroy {
       id: 'SEA-ORD',
       from: 'SEA',
       to: 'ORD',
-      pathD: 'M 145,110 Q 380,170 635,260',
-      flightNumber: 'DAL-924',
-      callsign: 'DELTA NINE-TWO-FOUR',
-      aircraftType: 'A321neo',
-      altitude: 'FL370',
-      speedKts: 490,
+      pathD: 'M 145,110 Q 390,165 635,260',
+      flightNumber: 'DAL-112',
+      callsign: 'DELTA ONE-ONE-TWO',
+      aircraftType: 'B737-900ER',
+      altitude: 'FL350',
+      speedKts: 470,
     },
     {
-      id: 'SFO-JFK',
-      from: 'SFO',
-      to: 'JFK',
-      pathD: 'M 95,300 Q 480,240 875,225',
-      flightNumber: 'DAL-280',
-      callsign: 'DELTA TWO-EIGHT-ZERO',
-      aircraftType: 'B767-400ER',
-      altitude: 'FL410',
-      speedKts: 525,
+      id: 'DFW-LAX',
+      from: 'DFW',
+      to: 'LAX',
+      pathD: 'M 520,450 Q 320,440 135,395',
+      flightNumber: 'DAL-688',
+      callsign: 'DELTA SIX-EIGHT-EIGHT',
+      aircraftType: 'A321-200',
+      altitude: 'FL360',
+      speedKts: 465,
     },
   ];
 
@@ -504,93 +588,121 @@ export class UsMap implements OnDestroy {
     {
       id: 'BLIP-1',
       flightNumber: 'DAL-907',
+      callsign: 'DELTA NINE-ZERO-SEVEN',
       corridorId: 'ATL-JFK',
       from: 'ATL',
       to: 'JFK',
       pathD: 'M 720,410 Q 805,305 875,225',
       progress: 0.65,
       speed: 0.0018,
-      altitude: '36,000 FT',
+      altitude: '36,000 FT (FL360)',
       eta: '42 MIN',
       status: 'CRUISING',
+      aircraftType: 'Airbus A321neo',
+      speedKts: 470,
+      mach: '0.78',
     },
     {
       id: 'BLIP-2',
       flightNumber: 'DAL-104',
+      callsign: 'DELTA ONE-ZERO-FOUR',
       corridorId: 'ATL-LAX',
       from: 'ATL',
       to: 'LAX',
       pathD: 'M 720,410 Q 420,380 135,395',
       progress: 0.38,
       speed: 0.0012,
-      altitude: '38,000 FT',
+      altitude: '38,000 FT (FL380)',
       eta: '2H 15M',
       status: 'CRUISING',
+      aircraftType: 'Boeing 767-400ER',
+      speedKts: 495,
+      mach: '0.82',
     },
     {
       id: 'BLIP-3',
       flightNumber: 'DAL-382',
+      callsign: 'DELTA THREE-EIGHT-TWO',
       corridorId: 'ATL-SEA',
       from: 'ATL',
       to: 'SEA',
       pathD: 'M 720,410 Q 420,230 145,110',
       progress: 0.82,
       speed: 0.0014,
-      altitude: '18,500 FT',
+      altitude: '18,500 FT (FL185)',
       eta: '18 MIN',
       status: 'DESCENDING',
+      aircraftType: 'Airbus A350-900',
+      speedKts: 410,
+      mach: '0.68',
     },
     {
       id: 'BLIP-4',
       flightNumber: 'DAL-512',
+      callsign: 'DELTA FIVE-ONE-TWO',
       corridorId: 'ATL-ORD',
       from: 'ATL',
       to: 'ORD',
       pathD: 'M 720,410 Q 675,330 635,260',
       progress: 0.22,
       speed: 0.0022,
-      altitude: '24,000 FT',
+      altitude: '24,000 FT (FL240)',
       eta: '54 MIN',
       status: 'CLIMBING',
+      aircraftType: 'Boeing 737-900ER',
+      speedKts: 420,
+      mach: '0.70',
     },
     {
       id: 'BLIP-5',
       flightNumber: 'DAL-401',
+      callsign: 'DELTA FOUR-ZERO-ONE',
       corridorId: 'JFK-LAX',
       from: 'JFK',
       to: 'LAX',
       pathD: 'M 875,225 Q 500,280 135,395',
       progress: 0.54,
       speed: 0.0011,
-      altitude: '39,000 FT',
+      altitude: '39,000 FT (FL390)',
       eta: '2H 40M',
       status: 'CRUISING',
+      aircraftType: 'Boeing 767-300ER',
+      speedKts: 510,
+      mach: '0.83',
     },
     {
       id: 'BLIP-6',
       flightNumber: 'DAL-203',
+      callsign: 'DELTA TWO-ZERO-THREE',
       corridorId: 'ATL-MIA',
       from: 'ATL',
       to: 'MIA',
       pathD: 'M 720,410 Q 770,480 810,555',
       progress: 0.76,
       speed: 0.0025,
-      altitude: '12,000 FT',
+      altitude: '12,000 FT (FL120)',
       eta: '14 MIN',
       status: 'DESCENDING',
+      aircraftType: 'Boeing 737-800',
+      speedKts: 360,
+      mach: '0.58',
     },
     {
       id: 'BLIP-7',
       flightNumber: 'DAL-890',
+      callsign: 'DELTA EIGHT-NINE-ZERO',
       corridorId: 'ATL-SFO',
       from: 'ATL',
       to: 'SFO',
       pathD: 'M 720,410 Q 400,320 95,300',
       progress: 0.44,
       speed: 0.0013,
-      altitude: '37,000 FT',
+      altitude: '37,000 FT (FL370)',
       eta: '2H 02M',
       status: 'CRUISING',
+      aircraftType: 'Airbus A350-900',
+      speedKts: 505,
+      mach: '0.82',
     },
   ]);
 
@@ -598,6 +710,27 @@ export class UsMap implements OnDestroy {
   protected readonly currentHub = computed(() => {
     const id = this.hoveredHubId() || this.selectedHubId();
     return this.hubs.find(h => h.id === id) || this.hubs[0];
+  });
+
+  // Selected aircraft detail view
+  protected readonly selectedFlight = computed(() => {
+    const id = this.selectedFlightId();
+    if (!id) return null;
+    return this.aircraftBlips().find(b => b.id === id) || null;
+  });
+
+  // Filtered hubs by search query
+  protected readonly filteredHubs = computed(() => {
+    const q = this.hubSearchQuery().toLowerCase().trim();
+    if (!q) return this.hubs;
+    return this.hubs.filter(
+      h =>
+        h.id.toLowerCase().includes(q) ||
+        h.iata.toLowerCase().includes(q) ||
+        h.name.toLowerCase().includes(q) ||
+        h.city.toLowerCase().includes(q) ||
+        h.state.toLowerCase().includes(q)
+    );
   });
 
   // Filtered corridors according to activeLayer and selection
@@ -647,11 +780,11 @@ export class UsMap implements OnDestroy {
     this.animFrameId = requestAnimationFrame(loop);
   }
 
-  // Compute (x, y) coordinates along a quadratic bezier curve for blip rendering
-  protected getPointOnBezier(pathD: string, t: number): { x: number; y: number } {
+  // Compute (x, y, angle) coordinates and tangent angle along a quadratic bezier curve
+  protected getPointOnBezier(pathD: string, t: number): { x: number; y: number; angle: number } {
     // Expected format: M x0,y0 Q cx,cy x1,y1
     const match = pathD.match(/M\s*([\d.]+),([\d.]+)\s*Q\s*([\d.]+),([\d.]+)\s*([\d.]+),([\d.]+)/);
-    if (!match) return { x: 0, y: 0 };
+    if (!match) return { x: 0, y: 0, angle: 0 };
 
     const x0 = parseFloat(match[1]);
     const y0 = parseFloat(match[2]);
@@ -668,7 +801,12 @@ export class UsMap implements OnDestroy {
     const x = uu * x0 + 2 * u * t * cx + tt * x1;
     const y = uu * y0 + 2 * u * t * cy + tt * y1;
 
-    return { x, y };
+    // Tangent derivative vector B'(t) = 2(1-t)(P1 - P0) + 2t(P2 - P1)
+    const dx = 2 * u * (cx - x0) + 2 * t * (x1 - cx);
+    const dy = 2 * u * (cy - y0) + 2 * t * (y1 - cy);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    return { x, y, angle };
   }
 
   // Interactive mouse movement tracker for live lat/lon telemetry
@@ -707,27 +845,94 @@ export class UsMap implements OnDestroy {
 
   protected setLayer(layer: 'all' | 'flights' | 'incidents' | 'radar' | 'ml') {
     this.activeLayer.set(layer);
+    this.playRadarBeep(520, 0.05);
   }
 
   protected selectHub(hubId: string) {
     this.selectedHubId.set(hubId);
+    this.selectedFlightId.set(null); // Return focus to hub
+    this.playRadarBeep(640, 0.06);
   }
 
   protected hoverHub(hubId: string | null) {
     this.hoveredHubId.set(hubId);
+    if (hubId) {
+      this.playRadarBeep(800, 0.03);
+    }
+  }
+
+  protected selectFlight(blipId: string) {
+    this.selectedFlightId.set(blipId);
+    this.playRadarBeep(980, 0.07);
+  }
+
+  protected clearFlightSelection() {
+    this.selectedFlightId.set(null);
+  }
+
+  protected onSearchInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.hubSearchQuery.set(input.value);
   }
 
   protected setSimSpeed(speed: number) {
     this.simSpeed.set(speed);
+    this.playRadarBeep(440, 0.04);
   }
 
   protected toggleIncidentSurge() {
     this.isIncidentSurge.update(v => !v);
+    this.playRadarBeep(this.isIncidentSurge() ? 320 : 640, 0.12);
+  }
+
+  // Audio synthesizer sonar chirp (Web Audio API)
+  protected toggleSound() {
+    this.soundEnabled.update(v => !v);
+    if (this.soundEnabled()) {
+      this.playRadarBeep(880, 0.08);
+    }
+  }
+
+  private playRadarBeep(freq = 640, duration = 0.06) {
+    if (!this.soundEnabled()) return;
+    try {
+      if (!this.audioCtx) {
+        const AudioContextClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        this.audioCtx = new AudioContextClass();
+      }
+      if (this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 0.5, this.audioCtx.currentTime + duration);
+
+      gain.gain.setValueAtTime(0.04, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + duration);
+    } catch {
+      // AudioContext unavailable or restricted by browser autoplay policy
+    }
   }
 
   ngOnDestroy(): void {
     if (this.animFrameId) {
       cancelAnimationFrame(this.animFrameId);
+    }
+    if (this.audioCtx) {
+      try {
+        this.audioCtx.close();
+      } catch {
+        // Ignored
+      }
     }
   }
 }
