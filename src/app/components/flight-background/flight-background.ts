@@ -7,5 +7,5 @@ import { Component, input } from '@angular/core';
   templateUrl: './flight-background.html',
 })
 export class FlightBackground {
-  readonly theme = input<'dark' | 'light'>('dark');
+  readonly theme = input<'dark' | 'light'>('light');
 }

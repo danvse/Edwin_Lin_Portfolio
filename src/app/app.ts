@@ -13,8 +13,8 @@ import { ProjectFlight } from './models/project.model';
   styleUrl: './app.scss',
 })
 export class App {
-  // Theme signal: Light or Dark mode for entire application
-  protected readonly theme = signal<'dark' | 'light'>('dark');
+  // Theme signal: Light or Dark mode for entire application (defaults to 'light')
+  protected readonly theme = signal<'dark' | 'light'>('light');
 
   // Controls which interactive demo modal is active ('delta' | 'discord' | null)
   protected readonly activeDemo = signal<'delta' | 'discord' | null>(null);

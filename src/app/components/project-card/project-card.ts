@@ -11,8 +11,8 @@ export class ProjectCard {
   // Required input signal passing the project data into this component
   readonly project = input.required<ProjectFlight>();
 
-  // Optional theme input: 'dark' or 'light'
-  readonly theme = input<'dark' | 'light'>('dark');
+  // Optional theme input: 'dark' or 'light' (defaults to 'light')
+  readonly theme = input<'dark' | 'light'>('light');
 
   // Output event to trigger the airplane takeoff transition into the live demo (emits demo target ID)
   readonly launchDemo = output<string>();

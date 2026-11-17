@@ -32,8 +32,8 @@ export interface StationData {
 export class TicketDashboard {
   readonly close = output<void>();
 
-  // Theme signal: Light or Dark mode
-  protected readonly theme = signal<'dark' | 'light'>('dark');
+  // Theme signal: Light or Dark mode (defaults to 'light')
+  protected readonly theme = signal<'dark' | 'light'>('light');
 
   // Filter signals
   protected readonly selectedStation = signal<string>('ALL');
